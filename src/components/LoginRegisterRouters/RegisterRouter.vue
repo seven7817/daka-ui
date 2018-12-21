@@ -19,7 +19,7 @@
         <input type="text" placeholder="请输入邮箱验证码" v-model="code" @keyup="showDelete2()">
         <div class="message-delete" v-if="show2" @click="deleteCode()"></div>
       </div>
-      <div class="get-message">获取验证码</div>
+      <div class="get-message" @click="binding && getVerificationCode()">{{tips3}}</div>
     </div>
     <div class="password-wra">
       <div class="password-logo"></div>
@@ -34,7 +34,7 @@
       <div class="password-delete" v-if="show3" @click="deletePassword()"></div>
     </div>
     <div class="tips2">{{tips2}}</div>
-    <div class="submit-wra">注 册</div>
+    <div class="submit-wra" @click="register()">注 册</div>
   </div>
 </template>
 <script>
@@ -44,11 +44,14 @@ export default {
       show1: false,
       show2: false,
       show3: false,
+      binding:true,
       Email: "",
       code: "",
       password: "",
       tips1: "",
-      tips2: ""
+      tips2: "",
+      tips3:"获取验证码",
+      totalTime:"60",
     };
   },
   methods: {
@@ -98,6 +101,41 @@ export default {
     },
     deleteCode(){
         this.code=''
+    },
+    getVerificationCode(){
+      // 取消该按钮的绑定
+      this.binding = false,
+      this.tips3 = '重新发送('+this.totalTime + 's)';
+      let clock = window.setInterval(() => {
+        this.totalTime -- 
+        this.tips3 = '重新发送('+this.totalTime + 's)'
+        if (this.totalTime <0){
+          window.clearInterval(clock)
+          this.tips3 = '重新发送'
+          this.totalTime = 60
+          this.binding = true;
+        }
+      },1000)
+      this.$axios.post('/apis/daka/getEmail/',
+       {
+          Email:this.Email
+       }
+      ).then(response =>{
+      console.log(response.data[0].code)
+      console.log(response.data[0])
+      })
+    },
+    register(){
+      this.$axios.post('/apis/daka/register/',
+       {
+          Email:this.Email,
+          code:this.code,
+          password:this.password
+       }
+      ).then(response =>{
+      console.log(response.data[0].code)
+      console.log(response.data[0])
+      })
     }
   }
 };

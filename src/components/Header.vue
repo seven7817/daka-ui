@@ -15,8 +15,8 @@
           <li  @click="loginFlag=!loginFlag">
             <router-link  to='login'>登录</router-link>
           </li>
-          <li>
-            <a href="#" >注册</a>
+          <li @click="loginFlag=!loginFlag">
+            <router-link  to='register'>注册</router-link>
           </li>
         </ul>
       </div>

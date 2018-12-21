@@ -16,11 +16,7 @@ export default {
   components: {
     Header
   },
-  created(){
-    this.$axios.get('/apis/daka/').then(data =>{
-      console.log(data)
-    })
-  }
+  
 };
 </script>
 
