@@ -12,12 +12,19 @@
           <li>
             <a href="#">消息</a>
           </li>
-          <li  @click="loginFlag=!loginFlag">
-            <router-link  to='login'>登录</router-link>
+          <li @click="loginFlag=!loginFlag" v-if="!isLogin">
+            <router-link to="login">登录</router-link>
           </li>
-          <li @click="loginFlag=!loginFlag">
-            <router-link  to='register'>注册</router-link>
+          <li @click="loginFlag=!loginFlag" v-if="!isLogin">
+            <router-link to="register">注册</router-link>
           </li>
+          <li v-if="isLogin">
+            <router-link to="register">{{Email}}</router-link>
+          </li>
+          <li v-if="isLogin">
+            <router-link to="register">注销</router-link>
+          </li>
+
         </ul>
       </div>
     </div>
@@ -29,20 +36,29 @@
         <div class="login-top">
           <ul>
             <li :class="{active:selectLogin}" @click="selectLogin=true">
-              <router-link  to='login' >账号登录</router-link>
+              <router-link to="login">账号登录</router-link>
             </li>
             <li :class="{active:!selectLogin}" @click="selectLogin=false">
-              <router-link to='register'>账号注册</router-link>
+              <router-link to="register">账号注册</router-link>
             </li>
           </ul>
-          <div >
+          <div>
             <span @click="loginFlag=!loginFlag"></span>
           </div>
         </div>
-        <router-view ></router-view>
+        <router-view></router-view>
       </div>
     </div>
     <div class="marsk" v-if="loginFlag"></div>
+
+    <ul class="top_bar">
+      <li
+        class="top_cell"
+        v-for="cell in 5"
+        :class="{ 'active': cell === selected }"
+        @click="choose(cell)"
+      >{{cell}}</li>
+    </ul>
   </div>
 </template>
 <script>
@@ -50,16 +66,33 @@ export default {
   components: {},
   data() {
     return {
+      selected: null,
       // 当点击首页面的登录，需要的状态
       loginFlag: false,
       // 当进入登录框，判断是选择登录还是注册的状态
-      selectLogin:true,
-    }
+      selectLogin: true,
+      Email: 'null',
+      isLogin:false,
+    };
   },
-  
+  methods: {
+    choose: function(index) {
+      this.selected = index;
+    },
+    hiddenLoginFrame(Email) {
+      this.loginFlag=!this.loginFlag
+      // alert('asdfasdfs')
+      this.Email = Email
+      this.isLogin = !this.isLogin
+    }
+  }
 };
 </script>
 <style>
+ul.top_bar li.active {
+  background-color: #000;
+}
+
 .header-con .nav {
   width: 100%;
   height: 90px;
@@ -116,38 +149,38 @@ export default {
   margin-top: -220px;
   background-color: #ffffff;
 }
-.login-frame .login-wra{
+.login-frame .login-wra {
   position: absolute;
-  width:360px;
+  width: 360px;
   height: 360px;
   top: 50%;
   margin-top: -180px;
   left: 50%;
   margin-left: -180px;
 }
-.login-frame .login-wra .login-top li{
+.login-frame .login-wra .login-top li {
   float: left;
   margin: 28px 40px;
   font-size: 20px;
   border-bottom: 2px solid #ffffff;
 }
-.login-frame .login-wra .login-top li.active{
-  border-bottom: 3px solid #49AF4F;
+.login-frame .login-wra .login-top li.active {
+  border-bottom: 3px solid #49af4f;
 }
-.login-frame .login-wra .login-top li a{
+.login-frame .login-wra .login-top li a {
   color: #000;
 }
 /* .login-frame .login-wra .login-top li a:hover{
   border-bottom: 3px solid #49AF4F;
 } */
-.login-frame .login-wra .login-top div{
+.login-frame .login-wra .login-top div {
   position: absolute;
   right: 0;
   top: 0;
 }
-.login-frame .login-wra .login-top div span{
+.login-frame .login-wra .login-top div span {
   display: inline-block;
-  background: url('../assets/关闭.png');
+  background: url("../assets/关闭.png");
   width: 20px;
   height: 20px;
   background-size: 20px;

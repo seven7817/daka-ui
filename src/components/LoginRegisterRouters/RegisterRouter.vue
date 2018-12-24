@@ -44,7 +44,10 @@ export default {
       show1: false,
       show2: false,
       show3: false,
+      // 让发送验证码只能60s发送一次
       binding:true,
+      //可否注册
+      bindingRegister:true,
       Email: "",
       code: "",
       password: "",
@@ -123,19 +126,31 @@ export default {
       ).then(response =>{
       console.log(response.data[0].code)
       console.log(response.data[0])
+      alert(response.data[0].msg)
       })
     },
     register(){
-      this.$axios.post('/apis/daka/register/',
-       {
-          Email:this.Email,
-          code:this.code,
-          password:this.password
-       }
-      ).then(response =>{
-      console.log(response.data[0].code)
-      console.log(response.data[0])
-      })
+      this.bindingRegister = this.tips1 ==''&&this.tips2==''&&this.code!=''&&this.Email!=''&&this.password!=''
+      console.log(this.bindingRegister)
+      if(this.bindingRegister==true){
+        this.bindingRegister = false
+        this.$axios.post('/apis/daka/register/',
+         {
+            Email:this.Email,
+            code:this.code,
+            password:this.password
+         }
+        ).then(response =>{
+          if(response.data[0].code==0){
+            alert('注册成功!')
+          }
+          else{
+            console.log(response.data[0])
+            alert(response.data[0].msg)
+          }
+            this.bindingRegister = true
+        })
+      }
     }
   }
 };
