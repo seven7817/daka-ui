@@ -28,6 +28,9 @@
     </div>
     <div class="tips2">{{tips2}}</div>
     <div class="submit-wra" @click="login()">登 录</div>
+    <div>
+      <router-link to="findPassword" style="font-size:12px;color:#999">忘记密码</router-link>
+    </div>
   </div>
 </template>
 <script>

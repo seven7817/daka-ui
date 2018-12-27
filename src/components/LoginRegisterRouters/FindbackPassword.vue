@@ -1,49 +1,61 @@
 <template>
-  <div class="register-content">
-    <div class="account-wra">
-      <div class="account-logo"></div>
-      <div class="account-inp">
-        <input
-          type="text"
-          placeholder="请输入邮箱"
-          v-model="Email"
-          @keyup="showDelete1()"
-          @blur.prevent="checkEmail()"
-        >
-      </div>
-      <div class="account-delete" v-if="show1" @click="deleteEmail()"></div>
+  <div class="con" v-if="show4"> 
+    <div class="login-top">
+      <ul>
+        <li>找回密码</li>
+        <li class="return" @click="show4=!show4">
+            <router-link to="login">返回</router-link>
+        </li>
+      </ul>
     </div>
-    <div class="tips1">{{tips1}}</div>
-    <div class="message">
-      <div class="text-delete">
-        <input type="text" placeholder="请输入邮箱验证码" v-model="code" @keyup="showDelete2()">
-        <div class="message-delete" v-if="show2" @click="deleteCode()"></div>
+    <div class="find-content">
+      <div class="account-wra">
+        <div class="account-logo"></div>
+        <div class="account-inp">
+          <input
+            type="text"
+            placeholder="请输入邮箱"
+            v-model="Email"
+            @keyup="showDelete1()"
+            @blur.prevent="checkEmail()"
+          >
+        </div>
+        <div class="account-delete" v-if="show1" @click="deleteEmail()"></div>
       </div>
-      <div class="get-message" @click="binding && getVerificationCode()">{{tips3}}</div>
-    </div>
-    <div class="password-wra">
-      <div class="password-logo"></div>
-      <div class="password-inp">
-        <input
-          type="password"
-          placeholder="请输入密码"
-          v-model="password"
-          @keyup="showDelete3(),checkPassword()"
-        >
+      <div class="tips1">{{tips1}}</div>
+      <div class="message">
+        <div class="text-delete">
+          <input type="text" placeholder="请输入邮箱验证码" v-model="code" @keyup="showDelete2()">
+          <div class="message-delete" v-if="show2" @click="deleteCode()"></div>
+        </div>
+        <div class="get-message" @click="binding && getVerificationCode()">{{tips3}}</div>
       </div>
-      <div class="password-delete" v-if="show3" @click="deletePassword()"></div>
+      <div class="password-wra">
+        <div class="password-logo"></div>
+        <div class="password-inp">
+          <input
+            type="password"
+            placeholder="请输入新的密码"
+            v-model="password"
+            @keyup="showDelete3(),checkPassword()"
+          >
+        </div>
+        <div class="password-delete" v-if="show3" @click="deletePassword()"></div>
+      </div>
+      <div class="tips2">{{tips2}}</div>
+      <div class="submit-wra" @click="register()">确 定</div>
     </div>
-    <div class="tips2">{{tips2}}</div>
-    <div class="submit-wra" @click="register()">注 册</div>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
+        
       show1: false,
       show2: false,
       show3: false,
+      show4:true,
       // 让发送验证码只能60s发送一次
       binding:true,
       //可否注册
@@ -106,33 +118,34 @@ export default {
         this.code=''
     },
     getVerificationCode(){
-      // 取消该按钮的绑定
-      if(this.Email!=''){
-        this.binding = false,
-        this.tips3 = '重新发送('+this.totalTime + 's)';
-        let clock = window.setInterval(() => {
-          this.totalTime -- 
-          this.tips3 = '重新发送('+this.totalTime + 's)'
-          if (this.totalTime <0){
-            window.clearInterval(clock)
-            this.tips3 = '重新发送'
-            this.totalTime = 60
-            this.binding = true;
-          }
-        },1000)
-        this.$axios.post('/apis/daka/getEmail/',
-         {
-            Email:this.Email,
-            operation:0,  //表示注册时候的验证码
-         }
-        ).then(response =>{
-        console.log(response.data[0].code)
-        console.log(response.data[0])
-        alert(response.data[0].msg)
-        })
-      }else{
-        alert('请输入邮箱')
-      }
+        if(this.Email!=''){
+
+            // 取消该按钮的绑定
+            this.binding = false,
+            this.tips3 = '重新发送('+this.totalTime + 's)';
+            let clock = window.setInterval(() => {
+              this.totalTime -- 
+              this.tips3 = '重新发送('+this.totalTime + 's)'
+              if (this.totalTime <0){
+                window.clearInterval(clock)
+                this.tips3 = '重新发送'
+                this.totalTime = 60
+                this.binding = true;
+              }
+            },1000)
+            this.$axios.post('/apis/daka/getEmail/',
+             {
+                Email:this.Email,
+                operation:1,  //表示是获取找回密码的验证码
+             }
+            ).then(response =>{
+            console.log(response.data[0].code)
+            console.log(response.data[0])
+            alert(response.data[0].msg)
+            })
+        }else{
+            alert('请输入邮箱')
+        }
     },
     register(){
       this.bindingRegister = this.tips1 ==''&&this.tips2==''&&this.code!=''&&this.Email!=''&&this.password!=''
@@ -147,7 +160,7 @@ export default {
          }
         ).then(response =>{
           if(response.data[0].code==0){
-            alert('注册成功!')
+            alert('修改成功!')
           }
           else{
             console.log(response.data[0])
@@ -160,27 +173,37 @@ export default {
   }
 };
 </script>
-
 <style>
-.register-content {
+.con {
+  width: 360px;
+  height: 360px;
+  z-index: 10;
+  background-color: #ffffff;
+  position: fixed;
+}
+.con .login-top ul li.return {
+  float: right;
+  margin-right: 0;
+}
+.con .find-content {
   margin-top: 80px;
   border: 1px solid #ffffff;
   width: 100%;
 }
-.register-content .account-wra,
-.register-content .password-wra,
-.register-content .submit-wra {
+.con .find-content .account-wra,
+.con .find-content .password-wra,
+.con .find-content .submit-wra {
   width: 358px;
   height: 44px;
   border: 1px solid #c5cddb;
   margin: 5px 0;
 }
-.register-content .message {
+.con .find-content .message {
   width: 358px;
   height: 44px;
   margin: 5px 0;
 }
-.register-content .account-wra .account-logo {
+.con .find-content .account-wra .account-logo {
   width: 20px;
   height: 44px;
   background: url("//nos.netease.com/edu-image/7A13709D12D506BA8CC110D88FFA1E68.png");
@@ -188,10 +211,10 @@ export default {
   float: left;
   margin-left: 10px;
 }
-.register-content .account-wra .account-inp {
+.con .find-content .account-wra .account-inp {
   float: left;
 }
-.register-content .account-wra .account-inp input {
+.con .find-content .account-wra .account-inp input {
   margin-left: 15px;
   width: 260px;
   height: 44px;
@@ -200,7 +223,7 @@ export default {
   border: none;
   outline: none;
 }
-.register-content .account-wra .account-delete {
+.con .find-content .account-wra .account-delete {
   margin-top: 10px;
   margin-left: 22px;
   width: 20px;
@@ -210,14 +233,14 @@ export default {
   float: left;
   cursor: pointer;
 }
-.register-content .message .text-delete {
+.con .find-content .message .text-delete {
   float: left;
   margin-right: 0px;
   width: 228px;
   height: 44px;
   border: 1px solid #c5cddb;
 }
-.register-content .message input {
+.con .find-content .message input {
   width: 200px;
   height: 44px;
   line-height: 44px;
@@ -227,7 +250,7 @@ export default {
   outline: none;
   text-indent: 1em;
 }
-.register-content .message .message-delete {
+.con .find-content .message .message-delete {
   margin-top: 12px;
   width: 20px;
   height: 20px;
@@ -236,7 +259,7 @@ export default {
   float: left;
   cursor: pointer;
 }
-.register-content .message .get-message {
+.con .find-content .message .get-message {
   width: 118px;
   height: 44px;
   border: 1px solid #49af4f;
@@ -247,7 +270,7 @@ export default {
   line-height: 44px;
   cursor: pointer;
 }
-.register-content .password-wra .password-logo {
+.con .find-content .password-wra .password-logo {
   width: 20px;
   height: 44px;
   background: url("//nos.netease.com/edu-image/7A13709D12D506BA8CC110D88FFA1E68.png");
@@ -255,10 +278,10 @@ export default {
   margin-left: 10px;
   float: left;
 }
-.register-content .password-wra .password-inp {
+.con .find-content .password-wra .password-inp {
   float: left;
 }
-.register-content .password-wra .password-inp input {
+.con .find-content .password-wra .password-inp input {
   margin-left: 15px;
   width: 260px;
   height: 44px;
@@ -267,7 +290,7 @@ export default {
   border: none;
   outline: none;
 }
-.register-content .password-wra .password-delete {
+.con .find-content .password-wra .password-delete {
   margin-top: 10px;
   margin-left: 22px;
   width: 20px;
@@ -277,7 +300,7 @@ export default {
   float: left;
   cursor: pointer;
 }
-.register-content .submit-wra {
+.con .find-content .submit-wra {
   background: #49af4f;
   line-height: 44px;
   text-align: center;
@@ -286,8 +309,8 @@ export default {
 
   font-size: 18px;
 }
-.register-content .tips1,
-.register-content .tips2 {
+.con .find-content .tips1,
+.con .find-content .tips2 {
   width: 358px;
   height: 22px;
   border: 1px solid #ffffff;
@@ -296,3 +319,4 @@ export default {
   font-size: 15px;
 }
 </style>
+

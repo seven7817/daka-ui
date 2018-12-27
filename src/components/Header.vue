@@ -12,24 +12,25 @@
           <li>
             <a href="#">消息</a>
           </li>
-          <li @click="loginFlag=!loginFlag" v-if="!isLogin">
+          <li @click="loginFlag=!loginFlag,selectLogin=true" v-if="!isLogin">
             <router-link to="login">登录</router-link>
           </li>
-          <li @click="loginFlag=!loginFlag" v-if="!isLogin">
+          <li @click="loginFlag=!loginFlag,selectLogin=false" v-if="!isLogin">
             <router-link to="register">注册</router-link>
-          </li>
+          </li>              
           <li v-if="isLogin">
-            <router-link to="register">{{Email}}</router-link>
+            <router-link to="mineMenu">{{Email}}</router-link>
           </li>
-          <li v-if="isLogin">
-            <router-link to="register">注销</router-link>
+          <li v-if="isLogin" @click="logout()">
+            <a href="#">注销</a>
           </li>
-
         </ul>
       </div>
     </div>
     <div class="menu">
-      <div class="menu-con"></div>
+      <div class="menu-con">
+        <router-view  ></router-view>
+      </div>
     </div>
     <div class="login-frame" v-if="loginFlag">
       <div class="login-wra">
@@ -46,19 +47,19 @@
             <span @click="loginFlag=!loginFlag"></span>
           </div>
         </div>
-        <router-view></router-view>
+        <router-view name="loginRegisterFind"></router-view>
       </div>
     </div>
     <div class="marsk" v-if="loginFlag"></div>
 
-    <ul class="top_bar">
+    <!-- <ul class="top_bar">
       <li
         class="top_cell"
         v-for="cell in 5"
         :class="{ 'active': cell === selected }"
         @click="choose(cell)"
       >{{cell}}</li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 <script>
@@ -81,11 +82,26 @@ export default {
     },
     hiddenLoginFrame(Email) {
       this.loginFlag=!this.loginFlag
+      sessionStorage.setItem('isLogin',true)
+      sessionStorage.setItem('Email',Email)
       // alert('asdfasdfs')
       this.Email = Email
       this.isLogin = !this.isLogin
+    },
+    logout(){
+      sessionStorage.clear()
+      this.isLogin = false
+      console.log(this.isLogin)
+    }
+  },
+  created(){
+    if(sessionStorage.getItem('isLogin')){
+      this.isLogin = sessionStorage.getItem('isLogin')
+      this.Email = sessionStorage.getItem('Email')
     }
   }
+
+
 };
 </script>
 <style>

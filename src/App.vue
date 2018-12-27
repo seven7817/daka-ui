@@ -2,7 +2,6 @@
   <div id="app">
     <div class="header">
       <Header></Header>
-
     </div>
     <div class="content"></div>
     <div class="foot">by sun</div>
