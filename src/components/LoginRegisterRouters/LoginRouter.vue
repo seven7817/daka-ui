@@ -22,9 +22,10 @@
           placeholder="请输入密码(6-18位)"
           v-model="password"
           @keyup="checkPassword(),showDelete2()"
+          @keyup.enter="login()"
         >
       </div>
-      <div class="password-delete" v-if="show2" @click="deletePassword()"></div>
+      <div class="password-delete" v-if="show2" @click="deletePassword()" ></div>
     </div>
     <div class="tips2">{{tips2}}</div>
     <div class="submit-wra" @click="login()">登 录</div>

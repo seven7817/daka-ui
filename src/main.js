@@ -14,6 +14,18 @@ const router = new VueRouter({
   routes,
   mode:'history'
 })
+router.beforeEach((to,from,next)=>{
+  if(to.path=='/mineMenu'||to.path=='/mineInfo'){
+    if(sessionStorage.getItem('isLogin')){
+      next()
+    }else{
+      next('/register')
+    }
+  }else{
+    next()
+  }
+
+})
 new Vue({
   el: '#app',
   router,

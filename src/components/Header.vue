@@ -10,7 +10,7 @@
             <a href="#">我的打卡</a>
           </li>
           <li>
-            <a href="#">消息</a>
+            <router-link to="messageMenu">消息</router-link>
           </li>
           <li @click="loginFlag=!loginFlag,selectLogin=true" v-if="!isLogin">
             <router-link to="login">登录</router-link>
@@ -27,11 +27,11 @@
         </ul>
       </div>
     </div>
-    <div class="menu">
+    <!-- <div class="menu">
       <div class="menu-con">
-        <router-view  ></router-view>
+        <router-view></router-view>
       </div>
-    </div>
+    </div> -->
     <div class="login-frame" v-if="loginFlag">
       <div class="login-wra">
         <div class="login-top">
@@ -92,6 +92,7 @@ export default {
       sessionStorage.clear()
       this.isLogin = false
       console.log(this.isLogin)
+      this.$router.push('register')
     }
   },
   created(){
@@ -142,7 +143,7 @@ ul.top_bar li.active {
   font-size: 15px;
   color: black;
 }
-.header-con .menu {
+/* .header-con .menu {
   width: 100%px;
   height: 51px;
   border: 1px solid black;
@@ -152,7 +153,7 @@ ul.top_bar li.active {
   height: 51px;
   margin: 0 auto;
   border: 1px solid black;
-}
+} */
 .login-frame {
   width: 440px;
   height: 400px;

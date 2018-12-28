@@ -3,17 +3,21 @@
     <div class="header">
       <Header></Header>
     </div>
-    <div class="content"></div>
+    <div class="content">
+      <Content></Content>
+    </div>
     <div class="foot">by sun</div>
   </div>
 </template>
 <script>
 import Header from './components/Header'
+import Content from './components/Content'
 // import sunzheng from './components/sunzheng'
 export default {
   name: "App",
   components: {
-    Header
+    Header,
+    Content
   },
   
 };
@@ -31,13 +35,13 @@ export default {
 }
 .header {
   width: 100%;
-  height: 142px;
+  height: 92px;
   border: 1px solid black;
 }
 
 .content {
   width: 100%;
-  height: 500px;
+  height: 530px;
   border: 1px solid black;
 }
 .foot {
