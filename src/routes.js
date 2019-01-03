@@ -6,6 +6,7 @@ import MessageMenu from './components/message/MessageMenu'
 import MineInfo from './components/mine/info/MineInfo'
 import MineDaka from './components/mine/info/MineDaka'
 import BaseInfo from './components/mine/info/mineInfo/BaseInfo'
+import ModifyPassword from './components/mine/info/mineInfo/ModifyPassword'
 
 export const routes = [
     { path:'/register' ,name:'registerLink', components:{
@@ -14,7 +15,8 @@ export const routes = [
     { path:'/findPassword' , components:{'loginRegisterFind':FindPassword}},
     { path:'/mineMenu', component:MineMenu , children:[
         {path:'/mineInfo',component:MineInfo, redirect: '/baseInfo',children:[
-            {path:'/baseInfo',component:BaseInfo}
+            {path:'/baseInfo',component:BaseInfo},
+            {path:'/modifyPassword',component:ModifyPassword},
         ]},
         {path:'/mineDaka',component:MineDaka},
     ]

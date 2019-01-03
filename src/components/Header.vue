@@ -80,6 +80,7 @@ export default {
     choose: function(index) {
       this.selected = index;
     },
+    // 这是子组件调用的方法  登录成功的时候
     hiddenLoginFrame(Email) {
       this.loginFlag=!this.loginFlag
       sessionStorage.setItem('isLogin',true)

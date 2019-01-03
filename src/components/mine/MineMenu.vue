@@ -4,7 +4,7 @@
       <div class="mine-menu">
         <ul class="mine-menu-ul">
           <li class="dingwei" :class="{'active':'1'===select}" @click="choose('1')">
-            <router-link to="mineInfo">我的个人资料</router-link>
+            <router-link to="/mineInfo">我的个人资料</router-link>
           </li>
           <li :class="{'active':'2'===select}" @click="choose('2')">
             <router-link to="mineDaka">我的打卡记录</router-link>
@@ -32,9 +32,10 @@ export default {
   },
   methods: {
     choose(index) {
-      console.log(index);
+      // console.log(index);
       this.select = index;
       sessionStorage.setItem('selectMineMenuItem',index)
+      sessionStorage.setItem('selectBaseInfo','1')
     }
   },
   created(){
@@ -55,6 +56,7 @@ div.mine-menu ul li {
   line-height: 53px;
   width: 120px;
   text-align: center;
+  
 }
 div.content-con div.mine-menu ul li a {
   display: inline-block;
@@ -83,6 +85,7 @@ div.content-con div.mine-menu ul.mine-menu-ul li.active a {
   height: 51px;
   margin: 0 auto;
   border: 1px solid black;
+  background-color: #ffffff;
 }
 .content-con .mine-menu-con .mine-menu .mine-menu-ul {
   width: 100%px;
@@ -91,7 +94,8 @@ div.content-con div.mine-menu ul.mine-menu-ul li.active a {
 }
 .content-con .right-content-con{
   width: 100%;
-  height: 100%-51px;
+  height: 90%;
+  
 }
 /* .content-con .mine-menu-con  .mine-menu .mine-menu-ul .menu-con {
   width: 1190px;

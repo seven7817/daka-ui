@@ -7,13 +7,13 @@
         </li>
         <!-- <li :class="{'active':'2'===select}" @click="choose('2')">
           <router-link to="mineInfo">修改基本信息</router-link>
-        </li> -->
+        </li>-->
         <li :class="{'active':'3'===select}" @click="choose('3')">
-          <router-link to="mineInfo">修改密码</router-link>
+          <router-link to="modifyPassword">修改密码</router-link>
         </li>
         <!-- <li :class="{'active':'4'===select}" @click="choose('4')">
           <router-link to="mineInfo">绑定邮箱</router-link>
-        </li> -->
+        </li>-->
       </ul>
     </div>
     <div class="right-content-con">
@@ -36,11 +36,29 @@ export default {
     }
   },
   created() {
-    if (sessionStorage.getItem("selectMineInfoItem")) {
-        console.log('ceshi'+sessionStorage.getItem("selectMineInfoItem"))
-      this.select = sessionStorage.getItem("selectMineInfoItem");
+    if (sessionStorage.getItem("selectBaseInfo")) {
+      // console.log("selected bb " + sessionStorage.getItem("selectBaseInfo"));
+      this.select = sessionStorage.getItem("selectBaseInfo");
+      sessionStorage.removeItem("selectBaseInfo");
+    } else {
+      if (sessionStorage.getItem("selectMineInfoItem")) {
+        // console.log("ceshi " + sessionStorage.getItem("selectMineInfoItem"));
+        this.select = sessionStorage.getItem("selectMineInfoItem");
+      }
     }
-  }
+  },
+  //监听路由的变化，变的时候刷新页面，以实现，点击“我的个人资料”，子路由自动跳转到“我的基本信息”
+  watch:{
+		'$route' (parem){
+			// console.info(parem);
+      //下面根据parem里不同的值做相应的处理
+      if (sessionStorage.getItem("selectBaseInfo")) {
+      // console.log("selected bb " + sessionStorage.getItem("selectBaseInfo"));
+      this.select = sessionStorage.getItem("selectBaseInfo");
+      sessionStorage.removeItem("selectBaseInfo");
+    }
+		 }
+}
 };
 </script>
 <style>
@@ -50,6 +68,7 @@ export default {
   margin: 0 auto;
   border: 1px solid black;
   position: relative;
+  background-color: #ffffff;
 }
 .bottom-con .left-nav-con {
   border: 1px solid black;
@@ -57,13 +76,15 @@ export default {
   left: 0;
 }
 .bottom-con .left-nav-con ul li {
-  width: 203px;
-  height: 47px;
+  
   border: 1px solid black;
   line-height: 47px;
   text-align: center;
 }
 .bottom-con .left-nav-con ul li a {
+  width: 203px;
+  height: 47px;
+  display: inline-block;
   color: black;
   font-weight: bold;
 }
