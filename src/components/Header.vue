@@ -2,27 +2,27 @@
   <div class="header-con">
     <div class="nav">
       <div class="nav-con">
-        <a href="#">
+        <router-link to="/main">
           <span>打卡系统</span>
-        </a>
+        </router-link>
         <ul>
           <li>
             <a href="#">我的打卡</a>
           </li>
           <li>
-            <router-link to="messageMenu">消息</router-link>
+            <router-link to="/messageMenu">消息</router-link>
           </li>
           <li @click="loginFlag=!loginFlag,selectLogin=true" v-if="!isLogin">
             <router-link to="login">登录</router-link>
           </li>
           <li @click="loginFlag=!loginFlag,selectLogin=false" v-if="!isLogin">
             <router-link to="register">注册</router-link>
-          </li>              
-          <li v-if="isLogin">
-            <router-link to="mineMenu">{{Email}}</router-link>
+          </li>
+          <li v-if="isLogin" @click="showMineMenu()">
+            <router-link to="/mineMenu">{{Email}}</router-link>
           </li>
           <li v-if="isLogin" @click="logout()">
-            <a href="#">注销</a>
+            <router-link to="/login">注销</router-link>
           </li>
         </ul>
       </div>
@@ -31,7 +31,7 @@
       <div class="menu-con">
         <router-view></router-view>
       </div>
-    </div> -->
+    </div>-->
     <div class="login-frame" v-if="loginFlag">
       <div class="login-wra">
         <div class="login-top">
@@ -51,7 +51,6 @@
       </div>
     </div>
     <div class="marsk" v-if="loginFlag"></div>
-
     <!-- <ul class="top_bar">
       <li
         class="top_cell"
@@ -59,7 +58,7 @@
         :class="{ 'active': cell === selected }"
         @click="choose(cell)"
       >{{cell}}</li>
-    </ul> -->
+    </ul>-->
   </div>
 </template>
 <script>
@@ -72,8 +71,8 @@ export default {
       loginFlag: false,
       // 当进入登录框，判断是选择登录还是注册的状态
       selectLogin: true,
-      Email: 'null',
-      isLogin:false,
+      Email: "null",
+      isLogin: false
     };
   },
   methods: {
@@ -82,34 +81,37 @@ export default {
     },
     // 这是子组件调用的方法  登录成功的时候
     hiddenLoginFrame(Email) {
-      this.loginFlag=!this.loginFlag
-      sessionStorage.setItem('isLogin',true)
-      sessionStorage.setItem('Email',Email)
+      this.loginFlag = !this.loginFlag;
+      sessionStorage.setItem("isLogin", true);
+      sessionStorage.setItem("Email", Email);
       // alert('asdfasdfs')
-      this.Email = Email
-      this.isLogin = !this.isLogin
+      this.Email = Email;
+      this.isLogin = !this.isLogin;
     },
-    logout(){
-      sessionStorage.clear()
-      this.isLogin = false
-      console.log(this.isLogin)
-      this.$router.push('register')
+    logout() {
+      sessionStorage.clear();
+      this.isLogin = false;
+      console.log(this.isLogin);
+      this.$router.push("register");
+    },
+    showMineMenu() {
+      sessionStorage.setItem("selectMineMenuItem", '1');
+      sessionStorage.setItem("selectBaseInfo", '1');
+                                 
     }
   },
-  created(){
-    if(sessionStorage.getItem('isLogin')){
-      this.isLogin = sessionStorage.getItem('isLogin')
-      this.Email = sessionStorage.getItem('Email')
+  created() {
+    if (sessionStorage.getItem("isLogin")) {
+      this.isLogin = sessionStorage.getItem("isLogin");
+      this.Email = sessionStorage.getItem("Email");
     }
   }
-
-
 };
 </script>
 <style>
-ul.top_bar li.active {
+/* ul.top_bar li.active {
   background-color: #000;
-}
+} */
 
 .header-con .nav {
   width: 100%;

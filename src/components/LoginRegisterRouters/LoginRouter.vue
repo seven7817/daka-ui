@@ -199,7 +199,6 @@ export default {
   text-align: center;
   color: #fff;
   cursor: pointer;
-
   font-size: 18px;
 }
 

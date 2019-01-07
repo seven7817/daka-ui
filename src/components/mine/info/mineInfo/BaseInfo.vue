@@ -79,7 +79,7 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
     this.$axios
       .post("/apis/daka/getBaseInfo/", {
         Email: sessionStorage.getItem("Email")
@@ -94,6 +94,7 @@ export default {
           this.gender = response.data[0].data.gender;
         } else {
           console.log(response.data[0]);
+          console.log(response.data);
         }
       });
   }

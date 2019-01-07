@@ -15,16 +15,16 @@ const router = new VueRouter({
   mode:'history'
 })
 router.beforeEach((to,from,next)=>{
-  if(to.path=='/mineMenu'||to.path=='/mineInfo'){
+  if(to.path.indexOf('/mineMenu')!=-1){
     if(sessionStorage.getItem('isLogin')){
       next()
     }else{
-      next('/register')
+      alert('请先登录 to.path:'+to.path+'from.path:'+from.path)
+      next('/login')
     }
   }else{
     next()
   }
-
 })
 new Vue({
   el: '#app',

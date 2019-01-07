@@ -3,13 +3,13 @@
     <div class="left-nav-con">
       <ul>
         <li :class="{'active':'1'===select}" @click="choose('1')">
-          <router-link to="baseInfo">我的基本信息</router-link>
+          <router-link to="/mineMenu/mineInfo/baseInfo">我的基本信息</router-link>
         </li>
         <!-- <li :class="{'active':'2'===select}" @click="choose('2')">
           <router-link to="mineInfo">修改基本信息</router-link>
         </li>-->
-        <li :class="{'active':'3'===select}" @click="choose('3')">
-          <router-link to="modifyPassword">修改密码</router-link>
+        <li :class="{'active':'3'===select}" @click="choose('3');clearSelectBaseInfo()">
+          <router-link to="/mineMenu/mineInfo/modifyPassword">修改密码</router-link>
         </li>
         <!-- <li :class="{'active':'4'===select}" @click="choose('4')">
           <router-link to="mineInfo">绑定邮箱</router-link>
@@ -33,9 +33,15 @@ export default {
       console.log(index);
       this.select = index;
       sessionStorage.setItem("selectMineInfoItem", index);
+    },
+    clearSelectBaseInfo() {
+      if (sessionStorage.getItem("selectBaseInfo")) {
+        sessionStorage.removeItem("selectBaseInfo");
+        // alert(sessionStorage.getItem("selectBaseInfo"))
+      }
     }
   },
-  created() {
+  mounted() {
     if (sessionStorage.getItem("selectBaseInfo")) {
       // console.log("selected bb " + sessionStorage.getItem("selectBaseInfo"));
       this.select = sessionStorage.getItem("selectBaseInfo");
@@ -47,18 +53,19 @@ export default {
       }
     }
   },
-  //监听路由的变化，变的时候刷新页面，以实现，点击“我的个人资料”，子路由自动跳转到“我的基本信息”
-  watch:{
-		'$route' (parem){
-			// console.info(parem);
+  // 监听路由的变化，变的时候刷新页面，以实现，点击“我的个人资料”，子路由自动跳转到“我的基本信息” selectBaseInfo 是上一级(MineMenu)设置的
+  watch: {
+    $route(parem) {
+      // console.info(parem);
       //下面根据parem里不同的值做相应的处理
       if (sessionStorage.getItem("selectBaseInfo")) {
-      // console.log("selected bb " + sessionStorage.getItem("selectBaseInfo"));
-      this.select = sessionStorage.getItem("selectBaseInfo");
-      sessionStorage.removeItem("selectBaseInfo");
+        // console.log("selected bb " + sessionStorage.getItem("selectBaseInfo"));
+        //alert(sessionStorage.getItem("selectBaseInfo"))
+        this.select = sessionStorage.getItem("selectBaseInfo");
+        sessionStorage.removeItem("selectBaseInfo");
+      }
     }
-		 }
-}
+  }
 };
 </script>
 <style>
@@ -76,7 +83,6 @@ export default {
   left: 0;
 }
 .bottom-con .left-nav-con ul li {
-  
   border: 1px solid black;
   line-height: 47px;
   text-align: center;
