@@ -105,7 +105,7 @@ export default {
 .right-content-center {
   width: 880px;
   height: 450px;
-  border: 1px solid red;
+  border: 1px solid #ddd;
   margin: 10px auto;
   position: relative;
 }
@@ -128,7 +128,7 @@ export default {
   float: left;
   width: 250px;
   height: 100px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   margin: 0 90px;
   color: #666;
 }
@@ -137,7 +137,6 @@ export default {
   display: inline-block;
   height: 100px;
   line-height: 100px;
-  /* text-align: center; */
 }
 .right-content-center ul li div.phone input,
 .right-content-center ul li div.age input,

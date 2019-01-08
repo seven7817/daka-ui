@@ -4,10 +4,10 @@
       <div class="main-nav">
         <ul class="main-nav-ul">
           <li class="dingwei" :class="{'active':'1'===select}" @click="choose('1')">
-            <router-link to="#">自主监督</router-link>
+            <router-link to="/main/byMyself">自主监督</router-link>
           </li>
           <li :class="{'active':'2'===select}" @click="choose('2')">
-            <router-link to="#">平台监督</router-link>
+            <router-link to="/main/bySystem">平台监督</router-link>
           </li>
           <li :class="{'active':'3'===select}" @click="choose('3')">
             <router-link to>指代监督</router-link>
@@ -15,7 +15,9 @@
         </ul>
       </div>
     </div>
-    <div class="main-cont-con"></div>
+    <div class="main-cont-con">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 <script>
@@ -42,6 +44,10 @@ export default {
 };
 </script>
 <style>
+.main-con{
+  width: 100%;
+  height: 100%;
+}
 .main-nav-con {
   width: 100%px;
   height: 51px;
@@ -87,6 +93,11 @@ div.main-con div.main-nav ul li a:hover {
 }
 div.main-con div.main-nav ul.main-nav-ul li.dingwei{
   margin-left: 203px;
+}
+.main-con .main-cont-con{
+  width: 100%;
+  height: 90%;
+  border: 1px solid black;
 }
 </style>
 

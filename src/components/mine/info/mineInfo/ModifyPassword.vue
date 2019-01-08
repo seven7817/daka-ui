@@ -110,7 +110,7 @@ export default {
   width: 442px;
   height: 402px;
   margin: 40px auto;
-  border: 1px solid red;
+  border: 1px solid #ddd;
 }
 .modify-psd-con .tip {
   font-size: 20px;

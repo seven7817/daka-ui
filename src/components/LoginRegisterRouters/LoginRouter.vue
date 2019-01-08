@@ -96,7 +96,7 @@ export default {
       if (this.admit == true) {
         this.admit = false;
         this.$axios
-          .post("/apis/daka/login/", {
+          .post("/apis/daka/login", {
             Email: this.Email,
             password: this.password
           })

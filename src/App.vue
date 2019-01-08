@@ -36,7 +36,8 @@ export default {
 .header {
   width: 100%;
   height: 92px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  background-image: linear-gradient(-90deg,#00d87d,#00db9d);
 }
 
 .content {

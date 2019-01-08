@@ -13,10 +13,10 @@
             <router-link to="/messageMenu">消息</router-link>
           </li>
           <li @click="loginFlag=!loginFlag,selectLogin=true" v-if="!isLogin">
-            <router-link to="login">登录</router-link>
+            <router-link to="/login">登录</router-link>
           </li>
           <li @click="loginFlag=!loginFlag,selectLogin=false" v-if="!isLogin">
-            <router-link to="register">注册</router-link>
+            <router-link to="/register">注册</router-link>
           </li>
           <li v-if="isLogin" @click="showMineMenu()">
             <router-link to="/mineMenu">{{Email}}</router-link>
@@ -37,17 +37,20 @@
         <div class="login-top">
           <ul>
             <li :class="{active:selectLogin}" @click="selectLogin=true">
-              <router-link to="login">账号登录</router-link>
+              <!-- <div>账号登录</div> -->
+              <router-link to="/login">账号登录</router-link>
             </li>
             <li :class="{active:!selectLogin}" @click="selectLogin=false">
-              <router-link to="register">账号注册</router-link>
+              <!-- <div>账号注册</div>  -->
+              <router-link to="/register">注册</router-link>
             </li>
           </ul>
-          <div>
+          <div class="close">
             <span @click="loginFlag=!loginFlag"></span>
           </div>
         </div>
         <router-view name="loginRegisterFind"></router-view>
+
       </div>
     </div>
     <div class="marsk" v-if="loginFlag"></div>
@@ -62,8 +65,13 @@
   </div>
 </template>
 <script>
+import LoginRouter from './LoginRegisterRouters/LoginRouter'
+import RegisterRouter from './LoginRegisterRouters/RegisterRouter'
 export default {
-  components: {},
+  components: {
+    login_router:LoginRouter,
+    register_router:RegisterRouter
+  },
   data() {
     return {
       selected: null,
@@ -116,16 +124,20 @@ export default {
 .header-con .nav {
   width: 100%;
   height: 90px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  
 }
 .header-con .nav .nav-con {
   width: 1190px;
   height: 90px;
   margin: 0 auto;
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  color: #ffffff;
+  font-weight: 300px;
+
 }
 .header-con .nav .nav-con a span {
-  color: black;
+  color: #ffffff;
   display: inline-block;
   height: 92px;
   width: 80px;
@@ -144,19 +156,8 @@ export default {
   line-height: 92px;
   margin: 0 20px;
   font-size: 15px;
-  color: black;
+  color: #ffffff;
 }
-/* .header-con .menu {
-  width: 100%px;
-  height: 51px;
-  border: 1px solid black;
-}
-.header-con .menu .menu-con {
-  width: 1190px;
-  height: 51px;
-  margin: 0 auto;
-  border: 1px solid black;
-} */
 .login-frame {
   width: 440px;
   height: 400px;
@@ -190,15 +191,12 @@ export default {
 .login-frame .login-wra .login-top li a {
   color: #000;
 }
-/* .login-frame .login-wra .login-top li a:hover{
-  border-bottom: 3px solid #49AF4F;
-} */
-.login-frame .login-wra .login-top div {
+.login-frame .login-wra .login-top .close {
   position: absolute;
   right: 0;
   top: 0;
 }
-.login-frame .login-wra .login-top div span {
+.login-frame .login-wra .login-top .close span {
   display: inline-block;
   background: url("../assets/关闭.png");
   width: 20px;
@@ -206,7 +204,6 @@ export default {
   background-size: 20px;
   cursor: pointer;
 }
-
 .marsk {
   position: fixed;
   width: 100%;

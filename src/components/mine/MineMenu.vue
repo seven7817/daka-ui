@@ -98,29 +98,25 @@ div.content-con div.mine-menu ul.mine-menu-ul li.active a {
 .mine-menu-con {
   width: 100%px;
   height: 51px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 .mine-menu-con .mine-menu {
   width: 1190px;
   height: 51px;
   margin: 0 auto;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   background-color: #ffffff;
+
+  /* box-shadow: 0 0 5px 5px #000; */
 }
 .content-con .mine-menu-con .mine-menu .mine-menu-ul {
   /* width: 100%px; */
   height: 51px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 .content-con .right-content-con {
   width: 100%;
   height: 90%;
 }
-/* .content-con .mine-menu-con  .mine-menu .mine-menu-ul .menu-con {
-  width: 1190px;
-  height: 51px;
-  margin: 0 auto;
-  border: 1px solid black;
-} */
 </style>
 

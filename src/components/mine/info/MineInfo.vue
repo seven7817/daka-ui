@@ -73,19 +73,22 @@ export default {
   width: 1190px;
   height: 100%;
   margin: 0 auto;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   position: relative;
   background-color: #ffffff;
 }
 .bottom-con .left-nav-con {
-  border: 1px solid black;
+  /* border: 1px solid black; */
   position: absolute;
   left: 0;
+  /* background-color: #000; */
+  /* opacity: 0.7; */
 }
 .bottom-con .left-nav-con ul li {
-  border: 1px solid black;
+  border: 1px solid #ddd;
   line-height: 47px;
   text-align: center;
+  
 }
 .bottom-con .left-nav-con ul li a {
   width: 203px;
@@ -105,7 +108,7 @@ export default {
 .bottom-con .right-content-con {
   width: 980px;
   height: 100%;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   position: absolute;
   right: 0px;
 }
