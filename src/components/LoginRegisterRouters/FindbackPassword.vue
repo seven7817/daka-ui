@@ -3,9 +3,6 @@
     <div class="login-top">
       <ul>
         <li>找回密码</li>
-        <li class="return" @click="show4=!show4">
-            <router-link to="login">返回</router-link>
-        </li>
       </ul>
     </div>
     <div class="find-content">
@@ -176,8 +173,8 @@ export default {
 <style>
 .con {
   width: 360px;
-  height: 360px;
-  z-index: 10;
+  height: 330px;
+  z-index: 100;
   background-color: #ffffff;
   position: fixed;
 }
@@ -306,7 +303,8 @@ export default {
   text-align: center;
   color: #fff;
   cursor: pointer;
-
+  margin-top: 5px;
+  margin-bottom: 0px;
   font-size: 18px;
 }
 .con .find-content .tips1,

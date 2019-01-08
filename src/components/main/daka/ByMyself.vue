@@ -13,12 +13,23 @@
     </div>
     <div class="main-cont-right">
         <div class="userInfo-con"></div>
-        <div class="apply-daka"></div>
+        <div class="apply-daka" v-on:click="daka()">我要打卡</div>
     </div>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  data(){
+    return {
+
+    }
+  },
+  methods:{
+    daka(){
+      this.$emit('bbb')
+    }
+  }
+};
 </script>
 <style>
 .main-cont {

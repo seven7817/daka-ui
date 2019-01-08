@@ -1,5 +1,5 @@
 <template>
-  <div class="main-con">
+  <div class="main-con" @bbb="bbb()">
     <div class="main-nav-con">
       <div class="main-nav">
         <ul class="main-nav-ul">
@@ -15,7 +15,7 @@
         </ul>
       </div>
     </div>
-    <div class="main-cont-con">
+    <div class="main-cont-con" @bbb="bbb()">
       <router-view></router-view>
     </div>
   </div>
@@ -31,20 +31,23 @@ export default {
     choose(index) {
       // console.log(index);
       this.select = index;
-      sessionStorage.setItem('selectMineMenuItem',index)
-      sessionStorage.setItem('selectBaseInfo','1')
+      sessionStorage.setItem("selectMineMenuItem", index);
+      sessionStorage.setItem("selectBaseInfo", "1");
+    },
+    bbb() {
+      alert("fasdfasdfabbbbbbbbbbbbbbbbbb");
     }
   },
-  created(){
-     if(sessionStorage.getItem('selectMineMenuItem')){
-      this.select = sessionStorage.getItem('selectMineMenuItem')
+  created() {
+    if (sessionStorage.getItem("selectMineMenuItem")) {
+      this.select = sessionStorage.getItem("selectMineMenuItem");
     }
   }
-  
+
 };
 </script>
 <style>
-.main-con{
+.main-con {
   width: 100%;
   height: 100%;
 }
@@ -80,7 +83,6 @@ div.main-nav ul li {
   text-align: center;
   padding-left: 27px;
   padding-right: 27px;
-  
 }
 div.main-con div.main-nav ul li a {
   display: inline-block;
@@ -91,10 +93,10 @@ div.main-con div.main-nav ul li a {
 div.main-con div.main-nav ul li a:hover {
   color: #10ae58;
 }
-div.main-con div.main-nav ul.main-nav-ul li.dingwei{
+div.main-con div.main-nav ul.main-nav-ul li.dingwei {
   margin-left: 203px;
 }
-.main-con .main-cont-con{
+.main-con .main-cont-con {
   width: 100%;
   height: 90%;
   border: 1px solid black;

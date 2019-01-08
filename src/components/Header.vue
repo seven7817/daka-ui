@@ -12,11 +12,11 @@
           <li>
             <router-link to="/messageMenu">消息</router-link>
           </li>
-          <li @click="loginFlag=!loginFlag,selectLogin=true" v-if="!isLogin">
-            <router-link to="/login">登录</router-link>
+          <li @click="loginFlag=!loginFlag,select3='1'" v-if="!isLogin">
+            <router-link to="">登录</router-link>
           </li>
-          <li @click="loginFlag=!loginFlag,selectLogin=false" v-if="!isLogin">
-            <router-link to="/register">注册</router-link>
+          <li @click="loginFlag=!loginFlag,select3='2'" v-if="!isLogin">
+            <router-link to="">注册</router-link>
           </li>
           <li v-if="isLogin" @click="showMineMenu()">
             <router-link to="/mineMenu">{{Email}}</router-link>
@@ -32,28 +32,31 @@
         <router-view></router-view>
       </div>
     </div>-->
-    <div class="login-frame" v-if="loginFlag">
+    <div class="login-frame" v-if="loginFlag" >
       <div class="login-wra">
         <div class="login-top">
           <ul>
-            <li :class="{active:selectLogin}" @click="selectLogin=true">
-              <!-- <div>账号登录</div> -->
-              <router-link to="/login">账号登录</router-link>
+            <li :class="{active:select3=='1'}" @click="select3='1'">
+              <div>账号登录</div>
             </li>
-            <li :class="{active:!selectLogin}" @click="selectLogin=false">
-              <!-- <div>账号注册</div>  -->
-              <router-link to="/register">注册</router-link>
+            <li :class="{active:select3=='2'}" @click="select3='2'">
+              <div>账号注册</div> 
             </li>
           </ul>
           <div class="close">
             <span @click="loginFlag=!loginFlag"></span>
           </div>
         </div>
-        <router-view name="loginRegisterFind"></router-view>
-
+        <loginRouter v-if="select3=='1'"></loginRouter>
+        <registerRouter v-if="select3=='2'"></registerRouter>
+        <findbackPassword v-if="select3=='3'" ></findbackPassword>
+        <div class="login-bottom">
+          <a href="#" style="font-size:12px;color:#999" @click="select3='3'">忘记密码</a> 
+          <a href="#" style="font-size:12px;color:#999" @click="select3='1'">登录</a>
+        </div>
       </div>
     </div>
-    <div class="marsk" v-if="loginFlag"></div>
+    <div class="marsk" v-if="loginFlag" @click="loginFlag=!loginFlag"></div>
     <!-- <ul class="top_bar">
       <li
         class="top_cell"
@@ -65,12 +68,14 @@
   </div>
 </template>
 <script>
-import LoginRouter from './LoginRegisterRouters/LoginRouter'
-import RegisterRouter from './LoginRegisterRouters/RegisterRouter'
+import loginRouter from './LoginRegisterRouters/LoginRouter'
+import registerRouter from './LoginRegisterRouters/RegisterRouter'
+import findbackPassword from './LoginRegisterRouters/FindbackPassword'
 export default {
   components: {
-    login_router:LoginRouter,
-    register_router:RegisterRouter
+    loginRouter,
+    registerRouter,
+    findbackPassword
   },
   data() {
     return {
@@ -78,9 +83,10 @@ export default {
       // 当点击首页面的登录，需要的状态
       loginFlag: false,
       // 当进入登录框，判断是选择登录还是注册的状态
-      selectLogin: true,
+      select3: 0,
       Email: "null",
-      isLogin: false
+      isLogin: false,
+      selectFind:false,
     };
   },
   methods: {
@@ -179,6 +185,11 @@ export default {
   left: 50%;
   margin-left: -180px;
 }
+.login-frame .login-wra .login-bottom{
+  position: absolute;
+  bottom: 0px;
+  left: 1px;
+}
 .login-frame .login-wra .login-top li {
   float: left;
   margin: 28px 40px;
@@ -188,8 +199,9 @@ export default {
 .login-frame .login-wra .login-top li.active {
   border-bottom: 3px solid #49af4f;
 }
-.login-frame .login-wra .login-top li a {
+.login-frame .login-wra .login-top li div {
   color: #000;
+  cursor: pointer;
 }
 .login-frame .login-wra .login-top .close {
   position: absolute;

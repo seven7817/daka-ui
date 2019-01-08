@@ -1,9 +1,14 @@
 <template>
-  <div class="content-con">
+  <div class="content-con"  >
           <!-- 显示细节的导航栏 -->
         <router-view></router-view>
   </div>
 </template>
+<script>
+export default {
+  
+}
+</script>
 
 
 <style>
