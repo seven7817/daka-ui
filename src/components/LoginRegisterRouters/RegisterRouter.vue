@@ -148,6 +148,7 @@ export default {
         ).then(response =>{
           if(response.data[0].code==0){
             alert('注册成功!')
+            this.$emit("jumpTologin");
           }
           else{
             console.log(response.data[0])

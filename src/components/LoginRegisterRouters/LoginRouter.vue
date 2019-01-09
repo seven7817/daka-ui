@@ -102,7 +102,9 @@ export default {
             if (response.data[0].code == 0) {
                 console.log(response.data[0]);
                 alert("登录成功!");
-                this.$parent.hiddenLoginFrame(this.Email)
+                console.log(this.Email)
+                this.$emit("loginSuccess",this.Email);
+                console.log('12')
             } else {
               console.log(response.data[0]);
               alert(response.data[0].msg);

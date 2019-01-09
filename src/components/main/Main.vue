@@ -1,5 +1,5 @@
 <template>
-  <div class="main-con" @bbb="bbb()">
+  <div class="main-con" >
     <div class="main-nav-con">
       <div class="main-nav">
         <ul class="main-nav-ul">
@@ -15,8 +15,8 @@
         </ul>
       </div>
     </div>
-    <div class="main-cont-con" @bbb="bbb()">
-      <router-view></router-view>
+    <div class="main-cont-con" >
+      <router-view ></router-view>
     </div>
   </div>
 </template>
@@ -34,9 +34,6 @@ export default {
       sessionStorage.setItem("selectMineMenuItem", index);
       sessionStorage.setItem("selectBaseInfo", "1");
     },
-    bbb() {
-      alert("fasdfasdfabbbbbbbbbbbbbbbbbb");
-    }
   },
   created() {
     if (sessionStorage.getItem("selectMineMenuItem")) {

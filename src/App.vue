@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <div class="header">
-      <Header></Header>
+      <Header ></Header>
     </div>
     <div class="content">
-      <Content></Content>
+      <Content ></Content>
     </div>
     <div class="foot">by sun</div>
   </div>
@@ -19,7 +19,6 @@ export default {
     Header,
     Content
   },
-  
 };
 </script>
 
@@ -32,6 +31,10 @@ export default {
   list-style: none;
   /* 去掉a标签样式 */
   text-decoration: none;
+}
+#app{
+  height: 100%;
+  width: 100%;
 }
 .header {
   width: 100%;

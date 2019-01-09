@@ -7,16 +7,16 @@
         </router-link>
         <ul>
           <li>
-            <a href="#">我的打卡</a>
+            <a href="#" @click="test()">我的打卡</a>
           </li>
           <li>
-            <router-link to="/messageMenu">消息</router-link>
+            <router-link to="/messageMenu" >消息</router-link>
           </li>
-          <li @click="loginFlag=!loginFlag,select3='1'" v-if="!isLogin">
-            <router-link to="">登录</router-link>
+          <li @click="loginFlag=true,select3='1'" v-if="!isLogin">
+            <router-link to>登录</router-link>
           </li>
-          <li @click="loginFlag=!loginFlag,select3='2'" v-if="!isLogin">
-            <router-link to="">注册</router-link>
+          <li @click="loginFlag=true,select3='2'" v-if="!isLogin">
+            <router-link to>注册</router-link>
           </li>
           <li v-if="isLogin" @click="showMineMenu()">
             <router-link to="/mineMenu">{{Email}}</router-link>
@@ -27,36 +27,14 @@
         </ul>
       </div>
     </div>
-    <!-- <div class="menu">
-      <div class="menu-con">
-        <router-view></router-view>
-      </div>
-    </div>-->
-    <div class="login-frame" v-if="loginFlag" >
-      <div class="login-wra">
-        <div class="login-top">
-          <ul>
-            <li :class="{active:select3=='1'}" @click="select3='1'">
-              <div>账号登录</div>
-            </li>
-            <li :class="{active:select3=='2'}" @click="select3='2'">
-              <div>账号注册</div> 
-            </li>
-          </ul>
-          <div class="close">
-            <span @click="loginFlag=!loginFlag"></span>
-          </div>
-        </div>
-        <loginRouter v-if="select3=='1'"></loginRouter>
-        <registerRouter v-if="select3=='2'"></registerRouter>
-        <findbackPassword v-if="select3=='3'" ></findbackPassword>
-        <div class="login-bottom">
-          <a href="#" style="font-size:12px;color:#999" @click="select3='3'">忘记密码</a> 
-          <a href="#" style="font-size:12px;color:#999" @click="select3='1'">登录</a>
-        </div>
-      </div>
-    </div>
-    <div class="marsk" v-if="loginFlag" @click="loginFlag=!loginFlag"></div>
+
+    <loginBox
+      v-show="loginFlag"
+      @close="close()"
+      :select1="select3"
+      @loginSuccess1="hiddenLoginFrame"
+    ></loginBox>
+
     <!-- <ul class="top_bar">
       <li
         class="top_cell"
@@ -68,14 +46,17 @@
   </div>
 </template>
 <script>
-import loginRouter from './LoginRegisterRouters/LoginRouter'
-import registerRouter from './LoginRegisterRouters/RegisterRouter'
-import findbackPassword from './LoginRegisterRouters/FindbackPassword'
+import loginRouter from "./LoginRegisterRouters/LoginRouter";
+import registerRouter from "./LoginRegisterRouters/RegisterRouter";
+import findbackPassword from "./LoginRegisterRouters/FindbackPassword";
+import loginBox from "./LoginBox";
+
 export default {
   components: {
     loginRouter,
     registerRouter,
-    findbackPassword
+    findbackPassword,
+    loginBox
   },
   data() {
     return {
@@ -86,7 +67,7 @@ export default {
       select3: 0,
       Email: "null",
       isLogin: false,
-      selectFind:false,
+      selectFind: false
     };
   },
   methods: {
@@ -109,16 +90,30 @@ export default {
       this.$router.push("register");
     },
     showMineMenu() {
-      sessionStorage.setItem("selectMineMenuItem", '1');
-      sessionStorage.setItem("selectBaseInfo", '1');
-                                 
-    }
+      sessionStorage.setItem("selectMineMenuItem", "1");
+      sessionStorage.setItem("selectBaseInfo", "1");
+    },
+    close() {
+      this.loginFlag = false;
+      this.select3 = 0;
+    },
+      foo(x, y, z) {
+        console.log(x, y, z);
+      },
+    test() {
+      let arr = [1, 2, 3];
+      this.foo(...arr);
+    },
   },
   created() {
     if (sessionStorage.getItem("isLogin")) {
       this.isLogin = sessionStorage.getItem("isLogin");
       this.Email = sessionStorage.getItem("Email");
     }
+    // if (sessionStorage.getItem("loginFlag") == true) {
+    //   this.loginFlag = sessionStorage.getItem("loginFlag");
+    //   sessionStorage.setItem("loginFlag", false);
+    // }
   }
 };
 </script>
@@ -131,7 +126,6 @@ export default {
   width: 100%;
   height: 90px;
   /* border: 1px solid black; */
-  
 }
 .header-con .nav .nav-con {
   width: 1190px;
@@ -140,7 +134,6 @@ export default {
   /* border: 1px solid black; */
   color: #ffffff;
   font-weight: 300px;
-
 }
 .header-con .nav .nav-con a span {
   color: #ffffff;
@@ -185,7 +178,7 @@ export default {
   left: 50%;
   margin-left: -180px;
 }
-.login-frame .login-wra .login-bottom{
+.login-frame .login-wra .login-bottom {
   position: absolute;
   bottom: 0px;
   left: 1px;

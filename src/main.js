@@ -5,6 +5,7 @@ import App from './App'
 import VueRouter from 'vue-router'
 import {routes} from './routes'
 import axios from 'axios'  
+import store from './store'
 
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
@@ -28,6 +29,7 @@ router.beforeEach((to,from,next)=>{
 })
 new Vue({
   el: '#app',
+  store,
   router,
   render:h=>h(App)
   // components: { App },

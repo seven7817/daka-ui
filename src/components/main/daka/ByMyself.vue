@@ -26,7 +26,7 @@ export default {
   },
   methods:{
     daka(){
-      this.$emit('bbb')
+      sessionStorage.setItem('loginFlag',true)
     }
   }
 };

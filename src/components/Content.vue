@@ -1,12 +1,16 @@
 <template>
   <div class="content-con"  >
           <!-- 显示细节的导航栏 -->
-        <router-view></router-view>
+        <router-view ></router-view>
   </div>
 </template>
 <script>
 export default {
-  
+  data(){
+    return {
+
+    }
+  }
 }
 </script>
 
