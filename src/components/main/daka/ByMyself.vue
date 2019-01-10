@@ -1,64 +1,50 @@
 <template>
-  <div class="main-cont">
-    <div class="main-cont-left">
-      <div class="msg">
-        <div class="responseNum">100</div>
-        <div class="msg-cont">
-          <div class="msgTitle">标题</div>
-          <div class="msgTime-con">
-            <div class="msgTime">时间</div>
-          </div>
+  <div class="main-cont-left">
+    <div class="msg">
+      <div class="responseNum">100</div>
+      <div class="msg-cont">
+        <div class="msgTitle">标题</div>
+        <div class="msgTime-con">
+          <div class="msgTime">时间</div>
         </div>
       </div>
-    </div>
-    <div class="main-cont-right">
-        <div class="userInfo-con"></div>
-        <div class="apply-daka" v-on:click="daka()">我要打卡</div>
     </div>
   </div>
 </template>
 <script>
-import {mapState,mapGetters,mapActions} from 'vuex';
+import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
-  data(){
-    return {
-
-    }
+  data() {
+    return {};
   },
-  computed:{
+  computed: {
     ...mapGetters(["showLoginFlag"])
   },
-  methods:{
-    ...mapActions(["setLoginFlag",'setSelect3']),
-    daka(){
-      if(sessionStorage.getItem('seesionIsLogin')!='true'){
-        this.setLoginFlag()
-        this.setSelect3('1')
+  methods: {
+    ...mapActions(["setLoginFlag", "setSelect3"]),
+    daka() {
+      if (sessionStorage.getItem("seesionIsLogin") != "true") {
+        this.setLoginFlag();
+        this.setSelect3("1");
       }
     }
   }
 };
 </script>
 <style>
-.main-cont {
-  width: 1190px;
-  height: 100%;
-  margin: 0 auto;
-  background-color: #ffffff;
-}
-.main-cont .main-cont-left {
+ .main-cont-left {
   float: left;
   height: 100%;
   width: 890px;
   border: 1px solid #000;
 }
-.main-cont .main-cont-left .msg {
+ .main-cont-left .msg {
   width: 100%;
   height: 60px;
   border: 1px solid black;
 }
-.main-cont .main-cont-left .msg .responseNum {
+ .main-cont-left .msg .responseNum {
   float: left;
   width: 50px;
   height: 30px;
@@ -70,40 +56,28 @@ export default {
   text-align: center;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-.main-cont .main-cont-left .msg .msg-cont {
+.main-cont-left .msg .msg-cont {
   float: right;
   width: 800px;
   height: 100%;
   /* border: 1px solid black; */
 }
-.main-cont .main-cont-left .msg .msgTitle {
+ .main-cont-left .msg .msgTitle {
   float: right;
   width: 100%;
   height: 60%;
   /* border: 1px solid black; */
 }
-.main-cont .main-cont-left .msg .msgTime-con {
+ .main-cont-left .msg .msgTime-con {
   float: right;
   width: 100%;
   height: 40%;
 }
-.main-cont .main-cont-left .msg .msgTime-con .msgTime{
-    float: right;
-    height: 100%;
-    width: 165px;
-}
-.main-cont .main-cont-right {
+ .main-cont-left .msg .msgTime-con .msgTime {
   float: right;
   height: 100%;
-  width: 290px;
-  border: 1px solid #000;
+  width: 165px;
 }
-.main-cont .main-cont-right .userInfo-con{
-    width: 100%;
-    height: 60%;
-    border:1px solid black;
-}
-
 </style>
 
 

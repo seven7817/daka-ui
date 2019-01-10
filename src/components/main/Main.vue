@@ -1,5 +1,5 @@
 <template>
-  <div class="main-con" >
+  <div class="main-con">
     <div class="main-nav-con">
       <div class="main-nav">
         <ul class="main-nav-ul">
@@ -15,8 +15,16 @@
         </ul>
       </div>
     </div>
-    <div class="main-cont-con" >
-      <router-view ></router-view>
+    <div class="main-cont-con">
+      <div class="main-cont">
+        <router-view></router-view>
+        <div class="main-cont-right">
+          <div class="userInfo-con"></div>
+          <div class="apply-daka-con">
+            <div class="apply-daka" v-on:click="daka()">我要打卡</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -33,14 +41,13 @@ export default {
       this.select = index;
       sessionStorage.setItem("selectMineMenuItem", index);
       sessionStorage.setItem("selectBaseInfo", "1");
-    },
+    }
   },
   created() {
     if (sessionStorage.getItem("selectMineMenuItem")) {
       this.select = sessionStorage.getItem("selectMineMenuItem");
     }
   }
-
 };
 </script>
 <style>
@@ -97,6 +104,48 @@ div.main-con div.main-nav ul.main-nav-ul li.dingwei {
   width: 100%;
   height: 90%;
   border: 1px solid black;
+}
+
+.main-con .main-cont-con .main-cont{
+  width: 1190px;
+  height: 100%;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+
+.main-con .main-cont-right {
+  float: right;
+  height: 100%;
+  width: 290px;
+  border: 1px solid #000;
+}
+.main-con .main-cont-right .userInfo-con {
+  width: 100%;
+  height: 60%;
+  border: 1px solid black;
+}
+.main-con .main-cont-right .apply-daka-con {
+  width: 100%;
+  height: 40%;
+  border: 1px solid black;
+  position: relative;
+}
+.main-con .main-cont-right .apply-daka-con .apply-daka {
+  margin: auto;
+  height: 25px;
+  width: 100px;
+  border: 1px solid black;
+  font-weight: bold;
+  text-align: center;
+  line-height: 25px;
+  background-color: #28a745;
+  color: #fff;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  margin-top: -12.5px;
+  left: 50%;
+  margin-left: -50px;
 }
 </style>
 
