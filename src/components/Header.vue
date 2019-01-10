@@ -10,29 +10,27 @@
             <a href="#" @click="test()">我的打卡</a>
           </li>
           <li>
-            <router-link to="/messageMenu" >消息</router-link>
+            <router-link to="/messageMenu">消息</router-link>
           </li>
-          <li @click="loginFlag=true,select3='1'" v-if="!isLogin">
+          <!-- 方法名必须给() -->
+          <li @click="setLoginFlag(),setSelect3('1')" v-if="!showIsLogin">
             <router-link to>登录</router-link>
           </li>
-          <li @click="loginFlag=true,select3='2'" v-if="!isLogin">
+          <li @click="setLoginFlag(),setSelect3('2')" v-if="!showIsLogin">
             <router-link to>注册</router-link>
           </li>
-          <li v-if="isLogin" @click="showMineMenu()">
-            <router-link to="/mineMenu">{{Email}}</router-link>
+          <li v-if="showIsLogin" @click="showMineMenu()">
+            <router-link to="/mineMenu">{{showEmail}}</router-link>
           </li>
-          <li v-if="isLogin" @click="logout()">
-            <router-link to="/login">注销</router-link>
+          <li v-if="showIsLogin" @click="logout()">
+            <router-link to="">注销</router-link>
           </li>
         </ul>
       </div>
     </div>
-
+    <!-- 引号的方法后面不能加空号 -->
     <loginBox
-      v-show="loginFlag"
-      @close="close()"
-      :select1="select3"
-      @loginSuccess1="hiddenLoginFrame"
+      v-show="showLoginFlag"
     ></loginBox>
 
     <!-- <ul class="top_bar">
@@ -51,6 +49,8 @@ import registerRouter from "./LoginRegisterRouters/RegisterRouter";
 import findbackPassword from "./LoginRegisterRouters/FindbackPassword";
 import loginBox from "./LoginBox";
 
+import {mapState,mapGetters,mapActions} from 'vuex';
+
 export default {
   components: {
     loginRouter,
@@ -61,60 +61,46 @@ export default {
   data() {
     return {
       selected: null,
-      // 当点击首页面的登录，需要的状态
-      loginFlag: false,
-      // 当进入登录框，判断是选择登录还是注册的状态
-      select3: 0,
-      Email: "null",
-      isLogin: false,
-      selectFind: false
+      seesionIsLogin:false
     };
   },
+  computed: {
+    ...mapGetters(["showLoginFlag",'showEmail']),
+    
+    showIsLogin(){
+      if(sessionStorage.getItem('seesionIsLogin')){
+        this.$store.dispatch('setIsLogin',JSON.parse(sessionStorage.getItem('seesionIsLogin')))
+        this.$store.dispatch('setEmail',sessionStorage.getItem('seesionEmail'))
+      }
+        return this.$store.getters.showIsLogin
+    }
+  },
   methods: {
+    ...mapActions(["setLoginFlag",'setSelect3','setIsLogin']),
     choose: function(index) {
       this.selected = index;
     },
-    // 这是子组件调用的方法  登录成功的时候
-    hiddenLoginFrame(Email) {
-      this.loginFlag = !this.loginFlag;
-      sessionStorage.setItem("isLogin", true);
-      sessionStorage.setItem("Email", Email);
-      // alert('asdfasdfs')
-      this.Email = Email;
-      this.isLogin = !this.isLogin;
-    },
     logout() {
       sessionStorage.clear();
-      this.isLogin = false;
-      console.log(this.isLogin);
-      this.$router.push("register");
+      this.setIsLogin(false);
+      // console.log(this.isLogin);
+      // this.$router.push("register");
     },
     showMineMenu() {
       sessionStorage.setItem("selectMineMenuItem", "1");
       sessionStorage.setItem("selectBaseInfo", "1");
     },
-    close() {
-      this.loginFlag = false;
-      this.select3 = 0;
+    foo(x, y, z) {
+      console.log(x, y, z);
     },
-      foo(x, y, z) {
-        console.log(x, y, z);
-      },
     test() {
       let arr = [1, 2, 3];
       this.foo(...arr);
-    },
-  },
-  created() {
-    if (sessionStorage.getItem("isLogin")) {
-      this.isLogin = sessionStorage.getItem("isLogin");
-      this.Email = sessionStorage.getItem("Email");
     }
-    // if (sessionStorage.getItem("loginFlag") == true) {
-    //   this.loginFlag = sessionStorage.getItem("loginFlag");
-    //   sessionStorage.setItem("loginFlag", false);
-    // }
-  }
+  },
+  // created(){
+  //   this.seesionIsLogin=sessionStorage.getItem('seesionIsLogin')
+  // }
 };
 </script>
 <style>

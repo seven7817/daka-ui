@@ -38,6 +38,7 @@
   </div>
 </template>
 <script>
+import {mapState,mapGetters,mapActions} from 'vuex';
 export default {
   data() {
     return {
@@ -58,6 +59,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["setSelect3"]),
     showDelete1() {
       if (this.Email != "") {
         this.show1 = true;
@@ -148,7 +150,8 @@ export default {
         ).then(response =>{
           if(response.data[0].code==0){
             alert('注册成功!')
-            this.$emit("jumpTologin");
+            //挑战到登录页面
+            this.setSelect3('1')
           }
           else{
             console.log(response.data[0])

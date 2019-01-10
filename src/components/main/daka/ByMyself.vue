@@ -18,15 +18,24 @@
   </div>
 </template>
 <script>
+import {mapState,mapGetters,mapActions} from 'vuex';
+
 export default {
   data(){
     return {
 
     }
   },
+  computed:{
+    ...mapGetters(["showLoginFlag"])
+  },
   methods:{
+    ...mapActions(["setLoginFlag",'setSelect3']),
     daka(){
-      sessionStorage.setItem('loginFlag',true)
+      if(sessionStorage.getItem('seesionIsLogin')!='true'){
+        this.setLoginFlag()
+        this.setSelect3('1')
+      }
     }
   }
 };

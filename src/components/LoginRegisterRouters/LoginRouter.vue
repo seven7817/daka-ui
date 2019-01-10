@@ -33,6 +33,7 @@
   </div>
 </template>
 <script>
+import {mapState,mapGetters,mapActions} from 'vuex';
 export default {
   data() {
     return {
@@ -50,6 +51,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["setLoginFlag",'setIsLogin','setEmail']),
     showDelete1() {
       if (this.Email != "") {
         this.show1 = true;
@@ -103,7 +105,13 @@ export default {
                 console.log(response.data[0]);
                 alert("登录成功!");
                 console.log(this.Email)
-                this.$emit("loginSuccess",this.Email);
+                //设置登录状态
+                sessionStorage.setItem('seesionIsLogin',true)   
+                sessionStorage.setItem('seesionEmail',this.Email)   
+                this.setIsLogin(true)
+                this.setEmail(this.Email)
+                // 关闭登录框
+                this.setLoginFlag();
                 console.log('12')
             } else {
               console.log(response.data[0]);

@@ -4,34 +4,34 @@
       <div class="login-wra">
         <div class="login-top">
           <ul>
-            <li :class="{active:select3=='1'}" @click="select3='1'">
+            <li :class="{active:showSelect3=='1'}" @click="setSelect3('1')">
               <div>账号登录</div>
             </li>
-            <li :class="{active:select3=='2'}" @click="select3='2'">
+            <li :class="{active:showSelect3=='2'}" @click="setSelect3('2')">
               <div>账号注册</div>
             </li>
           </ul>
           <div class="close">
-            <span @click="close()"></span>
+            <span @click="setLoginFlag()"></span>
           </div>
         </div>
-        <loginRouter v-if="select3=='1'" @loginSuccess='loginSuccess1'></loginRouter>
-        <registerRouter v-if="select3=='2'"  @jumpTologin='jumpTologin()'></registerRouter>
-        <findbackPassword v-if="select3=='3'"></findbackPassword>
+        <loginRouter v-if="showSelect3=='1'" ></loginRouter>
+        <registerRouter v-if="showSelect3=='2'"  ></registerRouter>
+        <findbackPassword v-if="showSelect3=='3'"></findbackPassword>
         <div class="login-bottom">
-          <a href="#" style="font-size:12px;color:#999" @click="select3='3'">忘记密码</a>
-          <a href="#" style="font-size:12px;color:#999" @click="select3='1'">登录</a>
+          <a href="#" style="font-size:12px;color:#999" @click="setSelect3('3')">忘记密码</a>
+          <a href="#" style="font-size:12px;color:#999" @click="setSelect3('1')">登录</a>
         </div>
       </div>
     </div>
-    <div class="marsk" @click="close()"></div>
+    <div class="marsk" @click="setLoginFlag()"></div>
   </div>
 </template>
 <script>
 import loginRouter from "./LoginRegisterRouters/LoginRouter";
 import registerRouter from "./LoginRegisterRouters/RegisterRouter";
 import findbackPassword from "./LoginRegisterRouters/FindbackPassword";
-
+import {mapState,mapGetters,mapActions} from 'vuex';
 export default {
   components: {
     loginRouter,
@@ -40,26 +40,19 @@ export default {
   },
   data() {
     return {
-      select3: 0,
+      // select3: 1,
       loginFlag: true
     };
   },
-  props: ['select1'],
-  watch: {
-    select1() {
-      this.select3= this.select1
-    }
+  
+  computed:{
+    ...mapGetters(["showSelect3"])
   },
   methods: {
-    close() {
-      this.$emit("close");
-    },
+    ...mapActions(["setLoginFlag",'setSelect3']),
     jumpTologin(){
-        this.select3 = '1'
+        this.setSelect3('1')
     },
-    loginSuccess1(data){
-        this.$emit("loginSuccess1",data)
-    }
   }
 };
 </script>

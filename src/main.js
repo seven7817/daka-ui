@@ -15,13 +15,15 @@ const router = new VueRouter({
   routes,
   mode:'history'
 })
+
 router.beforeEach((to,from,next)=>{
   if(to.path.indexOf('/mineMenu')!=-1){
-    if(sessionStorage.getItem('isLogin')){
+    if(sessionStorage.getItem('seesionIsLogin')){
       next()
     }else{
       alert('请先登录 to.path:'+to.path+'from.path:'+from.path)
-      next('/login')
+      store.dispatch('setLoginFlag')
+      store.dispatch('setSelect3','1')
     }
   }else{
     next()

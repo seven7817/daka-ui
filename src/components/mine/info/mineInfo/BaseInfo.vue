@@ -82,12 +82,12 @@ export default {
   mounted() {
     this.$axios
       .post("/apis/daka/getBaseInfo/", {
-        Email: sessionStorage.getItem("Email")
+        Email: sessionStorage.getItem("seesionEmail")
       })
       .then(response => {
         if (response.data[0].code == 0) {
           console.log(response.data[0].data);
-          this.Email = sessionStorage.getItem("Email");
+          this.Email = sessionStorage.getItem("seesionEmail");
           this.nickname = response.data[0].data.nickname;
           this.age = response.data[0].data.age;
           this.phone = response.data[0].data.phone;

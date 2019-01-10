@@ -1,10 +1,27 @@
 <template>
     <div class="main-cont">
-        by system
     </div>
+
 </template>
 <script>
 export default {
+    data(){
+        return {
+
+        }
+    },
+    computed:{
+        bbb(){
+            
+            return sessionStorage.getItem('aaa')
+        }
+    },
+    methods:{
+        aaa(){
+            sessionStorage.setItem('aaa','bbbb')
+        }
+    }
+
     
 }
 </script>
