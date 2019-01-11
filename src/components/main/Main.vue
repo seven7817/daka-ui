@@ -18,10 +18,11 @@
     <div class="main-cont-con">
       <div class="main-cont">
         <router-view></router-view>
+        <applyDaka v-if="showApplyDakaFlag"></applyDaka>
         <div class="main-cont-right">
           <div class="userInfo-con"></div>
           <div class="apply-daka-con">
-            <div class="apply-daka" v-on:click="daka()">我要打卡</div>
+            <div class="apply-daka" v-on:click="applyDaka()">申请打卡</div>
           </div>
         </div>
       </div>
@@ -29,18 +30,37 @@
   </div>
 </template>
 <script>
+import {mapState,mapGetters,mapActions} from 'vuex';
+import applyDaka from "./daka/ApplyDaka";
 export default {
+  components: {
+    applyDaka,
+  },
   data() {
     return {
-      select: null
+      select: null,
     };
   },
+  computed:{
+    ...mapGetters(["showApplyDakaFlag"])
+  },
   methods: {
+    ...mapActions(["setLoginFlag", "setSelect3",'setApplyDakaFlag']),
     choose(index) {
       // console.log(index);
       this.select = index;
       sessionStorage.setItem("selectMineMenuItem", index);
       sessionStorage.setItem("selectBaseInfo", "1");
+    },
+    applyDaka(){
+      if (sessionStorage.getItem("seesionIsLogin") != "true") {
+        // alert(sessionStorage.getItem("seesionIsLogin"))
+        this.setLoginFlag();
+        this.setSelect3("1");
+      }
+      else{
+        this.setApplyDakaFlag()
+      }
     }
   },
   created() {
@@ -104,9 +124,9 @@ div.main-con div.main-nav ul.main-nav-ul li.dingwei {
   width: 100%;
   height: 90%;
   border: 1px solid black;
+  position: relative;
 }
-
-.main-con .main-cont-con .main-cont{
+.main-con .main-cont-con .main-cont {
   width: 1190px;
   height: 100%;
   margin: 0 auto;
@@ -134,7 +154,7 @@ div.main-con div.main-nav ul.main-nav-ul li.dingwei {
   margin: auto;
   height: 25px;
   width: 100px;
-  border: 1px solid black;
+  border: 1px solid #ddd;
   font-weight: bold;
   text-align: center;
   line-height: 25px;
@@ -146,6 +166,7 @@ div.main-con div.main-nav ul.main-nav-ul li.dingwei {
   margin-top: -12.5px;
   left: 50%;
   margin-left: -50px;
+  cursor: pointer;
 }
 </style>
 

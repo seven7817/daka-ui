@@ -19,16 +19,10 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["showLoginFlag"])
+    ...mapGetters(["showApplyDakaFlag"])
   },
   methods: {
     ...mapActions(["setLoginFlag", "setSelect3"]),
-    daka() {
-      if (sessionStorage.getItem("seesionIsLogin") != "true") {
-        this.setLoginFlag();
-        this.setSelect3("1");
-      }
-    }
   }
 };
 </script>

@@ -8,7 +8,9 @@ const state = {//要设置的全局访问的state对象
     select3:'0',
     //要设置的初始属性值
     isLogin:false,
-    Email:''
+    Email:'',
+    //打卡窗弹是否弹出的状态，现在没有用
+    applyDakaFlag:false,
 };
 const getters = {   
     showLoginFlag(state) {  
@@ -22,6 +24,9 @@ const getters = {
     },
     showEmail(state) {  
         return state.Email
+    },
+    showApplyDakaFlag(state) {  
+        return state.applyDakaFlag
     },
 };
 const mutations = {
@@ -37,6 +42,9 @@ const mutations = {
     setEmail(state,Email) {   
         state.Email = Email;
     },
+    setApplyDakaFlag(state) {   
+        state.applyDakaFlag = !state.applyDakaFlag;
+    },
 
 };
 const actions = {
@@ -51,6 +59,9 @@ const actions = {
     },
     setEmail(context,Email) {   
         context.commit('setEmail',Email);
+    },
+    setApplyDakaFlag(context) {   
+        context.commit('setApplyDakaFlag');
     },
 };
 const store = new Vuex.Store({
