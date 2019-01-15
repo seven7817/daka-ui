@@ -8,37 +8,78 @@
           <div class="msgTime">时间</div>
         </div>
       </div>
+      <vue-qr text="http://47.101.212.238:8080/daka/index?Email=751425868@qq.com" :size="150" ></vue-qr>
+      <div @click="isRecharge()">
+        我已扫码
+      </div>
+      <!-- <vue-qr text="Hello world!" :callback="test" qid="testid"></vue-qr> -->
     </div>
   </div>
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
+import VueQr from "vue-qr";
 
 export default {
+  components: { VueQr },
+
   data() {
-    return {};
+    return {
+      clock:null
+    };
   },
   computed: {
     ...mapGetters(["showApplyDakaFlag"])
   },
   methods: {
     ...mapActions(["setLoginFlag", "setSelect3"]),
+    test(dataUrl, id) {
+      console.log(url, id);
+    },
+    register() {
+      this.$axios.get("/apis/daka/", {
+      });
+    },
+    isRecharge() {
+      alert("fasf");
+      this.clock = window.setInterval(() => {
+        setTimeout(this.sendMsgAllTheTime(), 0);
+      }, 3000);
+    },
+    sendMsgAllTheTime() {
+      alert("fasf1");
+      this.$axios.post("/apis/daka/isRecharge/", {
+        Email:'751425868@qq.com'
+      }).then(response => {
+        console.log(response.data[0].code);
+        console.log(response.data[0]);
+        // alert(response.data[0].msg);
+        if(response.data[0].code=='0'){
+          window.clearInterval(this.clock)
+        }
+      });
+    }
   }
 };
 </script>
 <style>
- .main-cont-left {
+.qrcode {
+  height: 500px;
+  width: 500px;
+  border: 1px solid black;
+}
+.main-cont-left {
   float: left;
   height: 100%;
   width: 890px;
   border: 1px solid #000;
 }
- .main-cont-left .msg {
+.main-cont-left .msg {
   width: 100%;
   height: 60px;
   border: 1px solid black;
 }
- .main-cont-left .msg .responseNum {
+.main-cont-left .msg .responseNum {
   float: left;
   width: 50px;
   height: 30px;
@@ -56,18 +97,18 @@ export default {
   height: 100%;
   /* border: 1px solid black; */
 }
- .main-cont-left .msg .msgTitle {
+.main-cont-left .msg .msgTitle {
   float: right;
   width: 100%;
   height: 60%;
   /* border: 1px solid black; */
 }
- .main-cont-left .msg .msgTime-con {
+.main-cont-left .msg .msgTime-con {
   float: right;
   width: 100%;
   height: 40%;
 }
- .main-cont-left .msg .msgTime-con .msgTime {
+.main-cont-left .msg .msgTime-con .msgTime {
   float: right;
   height: 100%;
   width: 165px;
