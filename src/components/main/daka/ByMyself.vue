@@ -8,10 +8,6 @@
           <div class="msgTime">时间</div>
         </div>
       </div>
-      <vue-qr text="http://47.101.212.238:8080/daka/index?Email=751425868@qq.com" :size="150" ></vue-qr>
-      <div @click="isRecharge()">
-        我已扫码
-      </div>
       <!-- <vue-qr text="Hello world!" :callback="test" qid="testid"></vue-qr> -->
     </div>
   </div>
@@ -33,32 +29,6 @@ export default {
   },
   methods: {
     ...mapActions(["setLoginFlag", "setSelect3"]),
-    test(dataUrl, id) {
-      console.log(url, id);
-    },
-    register() {
-      this.$axios.get("/apis/daka/", {
-      });
-    },
-    isRecharge() {
-      alert("fasf");
-      this.clock = window.setInterval(() => {
-        setTimeout(this.sendMsgAllTheTime(), 0);
-      }, 3000);
-    },
-    sendMsgAllTheTime() {
-      alert("fasf1");
-      this.$axios.post("/apis/daka/isRecharge/", {
-        Email:'751425868@qq.com'
-      }).then(response => {
-        console.log(response.data[0].code);
-        console.log(response.data[0]);
-        // alert(response.data[0].msg);
-        if(response.data[0].code=='0'){
-          window.clearInterval(this.clock)
-        }
-      });
-    }
   }
 };
 </script>

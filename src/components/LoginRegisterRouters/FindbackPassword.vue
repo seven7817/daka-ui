@@ -116,7 +116,6 @@ export default {
     },
     getVerificationCode(){
         if(this.Email!=''){
-
             // 取消该按钮的绑定
             this.binding = false,
             this.tips3 = '重新发送('+this.totalTime + 's)';

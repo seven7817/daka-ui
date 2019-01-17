@@ -12,7 +12,7 @@
             </li>
           </ul>
           <div class="close">
-            <span @click="setLoginFlag()"></span>
+            <span @click="setLoginFlag()" ></span>
           </div>
         </div>
         <loginRouter v-if="showSelect3=='1'" ></loginRouter>
