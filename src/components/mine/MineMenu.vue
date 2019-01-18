@@ -7,7 +7,7 @@
             <router-link to="/mineMenu/mineInfo">我的个人资料</router-link>
           </li>
           <li :class="{'active':'2'===select}" @click="choose('2');clearSelectMineMenu()">
-            <router-link to="/mineMenu/mineDaka">我的打卡记录</router-link>
+            <router-link to="/mineMenu/mineDaka">我的打卡</router-link>
           </li>
           <li :class="{'active':'3'===select}" @click="choose('3')">
             <router-link to>我的钱包</router-link>

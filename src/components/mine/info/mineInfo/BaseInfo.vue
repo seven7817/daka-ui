@@ -101,7 +101,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .right-content-center {
   width: 880px;
   height: 450px;

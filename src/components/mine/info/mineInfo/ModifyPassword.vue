@@ -105,7 +105,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .modify-psd-con {
   width: 442px;
   height: 402px;

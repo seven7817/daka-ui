@@ -1,12 +1,15 @@
 import MineMenu from './components/mine/MineMenu'
 import MessageMenu from './components/message/MessageMenu'
 import MineInfo from './components/mine/info/MineInfo'
-import MineDaka from './components/mine/info/MineDaka'
+import MineDaka from './components/mine/daka/MineDaka'
 import BaseInfo from './components/mine/info/mineInfo/BaseInfo'
 import ModifyPassword from './components/mine/info/mineInfo/ModifyPassword'
 import Main from './components/main/Main'
 import ByMyself from './components/main/daka/ByMyself'
 import BySystem from './components/main/daka/BySystem'
+
+import DakaHistory from './components/mine/daka/mineDaka/DakaHistory'
+import Finishing from './components/mine/daka/mineDaka/Finishing'
 
 export const routes = [
     
@@ -18,7 +21,10 @@ export const routes = [
                     { path: '/mineMenu/mineInfo/modifyPassword', component: ModifyPassword },
                 ]
             },
-            { path: '/mineMenu/mineDaka', component: MineDaka },
+            { path: '/mineMenu/mineDaka', component: MineDaka,children:[
+                { path: '/mineMenu/mineDaka/dakaHistory', component: DakaHistory },
+                { path: '/mineMenu/mineDaka/finishing', component: Finishing },
+            ] },
         ]
     },
     { path: '/MessageMenu', component: MessageMenu },

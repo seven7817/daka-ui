@@ -6,7 +6,7 @@
           <li class="dingwei" :class="{'active':'1'===select}" @click="choose('1')">
             <router-link to="/main/byMyself">自主监督</router-link>
           </li>
-          <li :class="{'active':'2'===select}" @click="choose('2')">
+          <li :class="{'active':'2'===select}" @click="choose('2'),test()">
             <router-link to="/main/bySystem">平台监督</router-link>
           </li>
           <li :class="{'active':'3'===select}" @click="choose('3')">
@@ -30,38 +30,41 @@
   </div>
 </template>
 <script>
-import {mapState,mapGetters,mapActions} from 'vuex';
+import { mapState, mapGetters, mapActions } from "vuex";
 import applyDaka from "./daka/ApplyDaka";
 export default {
   components: {
-    applyDaka,
+    applyDaka
   },
   data() {
     return {
-      select: null,
+      select: null
     };
   },
-  computed:{
+  computed: {
     ...mapGetters(["showApplyDakaFlag"])
   },
   methods: {
-    ...mapActions(["setLoginFlag", "setSelect3",'setApplyDakaFlag']),
+    ...mapActions(["setLoginFlag", "setSelect3", "setApplyDakaFlag"]),
     choose(index) {
       // console.log(index);
       this.select = index;
       sessionStorage.setItem("selectMineMenuItem", index);
       sessionStorage.setItem("selectBaseInfo", "1");
     },
-    applyDaka(){
+    applyDaka() {
       if (sessionStorage.getItem("seesionIsLogin") != "true") {
         // alert(sessionStorage.getItem("seesionIsLogin"))
         this.setLoginFlag();
         this.setSelect3("1");
+      } else {
+        this.setApplyDakaFlag();
       }
-      else{
-        this.setApplyDakaFlag()
-      }
-    }
+    },
+    test(){
+      var date = new Date()
+      console.log(date.getTime())
+    } 
   },
   created() {
     if (sessionStorage.getItem("selectMineMenuItem")) {

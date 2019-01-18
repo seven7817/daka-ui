@@ -23,7 +23,7 @@
             <router-link to="/mineMenu">{{showEmail}}</router-link>
           </li>
           <li v-if="showIsLogin" @click="logout()">
-            <router-link to="">注销</router-link>
+            <router-link to="/main">注销</router-link>
           </li>
         </ul>
       </div>
@@ -32,15 +32,6 @@
     <loginBox
       v-show="showLoginFlag"
     ></loginBox>
-
-    <!-- <ul class="top_bar">
-      <li
-        class="top_cell"
-        v-for="cell in 5"
-        :class="{ 'active': cell === selected }"
-        @click="choose(cell)"
-      >{{cell}}</li>
-    </ul>-->
   </div>
 </template>
 <script>

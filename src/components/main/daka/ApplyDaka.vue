@@ -62,7 +62,7 @@
             name="points"
             min="1"
             max="100"
-            placeholder="按次计算(输入1-100的整数)"
+            placeholder="按次计算(输入0-100的数字)"
             v-model="moneyVeryTime"
           >
         </div>
@@ -94,10 +94,11 @@ export default {
       moneyVeryTime: ""
     };
   },
+
   computed: {
     ...mapGetters(["showScanCodeFlag"]),
     totolMoney() {
-      return this.times * this.moneyVeryTime + "元";
+      return (this.times * this.moneyVeryTime).toFixed(2)+ "元";
     }
   },
   methods: {
@@ -112,17 +113,24 @@ export default {
         this.moneyVeryTime == ""
       ) {
         alert("请输入正确的信息");
-      } else {
+      } else if (this.startDate < this.getCurrentTime()) {
+        alert("选择的日期必须大于当前日期");
+      } else if(!/^\+?[1-9][0-9]*$/.test(this.times)||this.times>100){
+        alert('请输入正确的打卡次数')
+      } else if(this.moneyVeryTime<0||this.moneyVeryTime>100){
+        alert('请输入正确的金额')
+      }
+      else {
         this.setScanCodeFlag();
+        //生成二维码显示的结果 需要用
         sessionStorage.setItem("totalMoney", this.totolMoney);
       }
     },
     saveDakaInfo() {
       console.log("正在保存信息并调回首页");
-
       this.$axios
         .post("/apis/daka/saveDakaInfo/", {
-          Email: sessionStorage.getItem('seesionEmail'),
+          Email: sessionStorage.getItem("seesionEmail"),
           dakaType: this.dakaType,
           title: this.title,
           startDate: this.startDate,
@@ -132,15 +140,37 @@ export default {
         })
         .then(response => {
           console.log(response.data[0].code),
-          console.log(response.data[0]),
-          this.dakaType = "",
-          this.title = "",
-          this.startDate = "",
-          this.timeInterval = "",
-          this.times = "",
-          this.moneyVeryTime = "",
-          this.setApplyDakaFlag()
+            console.log(response.data[0]),
+            this.setApplyDakaFlag();
         });
+    },
+    getCurrentTime() {
+      var date = new Date(); //当前时间
+      var month = this.zeroFill(date.getMonth() + 1); //月
+      var day = this.zeroFill(date.getDate()); //日
+      var hour = this.zeroFill(date.getHours()); //时
+      var minute = this.zeroFill(date.getMinutes()); //分
+      var second = this.zeroFill(date.getSeconds()); //秒 //当前时间
+      var curTime =
+        date.getFullYear() +
+        "-" +
+        month +
+        "-" +
+        day +
+        "T" +
+        hour +
+        ":" +
+        minute +
+        ":" +
+        second;
+      return curTime;
+    },
+    zeroFill(i) {
+      if (i >= 0 && i <= 9) {
+        return "0" + i;
+      } else {
+        return i;
+      }
     }
   }
 };

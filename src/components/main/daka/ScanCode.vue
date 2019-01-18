@@ -9,9 +9,9 @@
         <vue-qr :text="content" :size="150"></vue-qr>
       </div>
       <div class="tips" v-show="tipsFlag">{{tips}}</div>
-      <div class="cancel" @click="setScanCodeFlag()">返回</div>
+      <div class="cancel" @click="setScanCodeFlag(),stopLock()">返回</div>
     </div>
-    <div class="marsk" @click="setScanCodeFlag()"></div>
+    <div class="marsk" @click="setScanCodeFlag(),stopLock()"></div>
   </div>
 </template>
 <script>
@@ -48,6 +48,9 @@ export default {
   },
   methods: {
     ...mapActions(["setScanCodeFlag"]),
+    stopLock(){
+      window.clearInterval(this.clock);
+    },
     isRecharge() {
       this.clock = window.setInterval(() => {
         setTimeout(this.sendMsgAllTheTime(), 0);
@@ -75,7 +78,7 @@ export default {
             }, 2000);
           }
         });
-    },
+    }
   }
 };
 </script>
