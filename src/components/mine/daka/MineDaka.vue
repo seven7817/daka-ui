@@ -32,7 +32,7 @@ export default {
   
 };
 </script>
-<style>
+<style scoped>
 .bottom-con {
   width: 1190px;
   height: 100%;
