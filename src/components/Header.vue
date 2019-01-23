@@ -5,33 +5,33 @@
         <router-link to="/main">
           <span>打卡系统</span>
         </router-link>
-        <ul>
-          <li>
-            <a href="#" @click="test()">我的打卡</a>
-          </li>
-          <li>
-            <router-link to="/messageMenu">消息</router-link>
-          </li>
-          <!-- 方法名必须给() -->
-          <li @click="setLoginFlag(),setSelect3('1')" v-if="!showIsLogin">
-            <router-link to>登录</router-link>
-          </li>
-          <li @click="setLoginFlag(),setSelect3('2')" v-if="!showIsLogin">
-            <router-link to>注册</router-link>
-          </li>
-          <li v-if="showIsLogin" @click="showMineMenu()">
-            <router-link to="/mineMenu">{{showEmail}}</router-link>
-          </li>
-          <li v-if="showIsLogin" @click="logout()">
-            <router-link to="/main">注销</router-link>
-          </li>
-        </ul>
+        <div class="ul-con">
+          <ul>
+            <li>
+              <a href="#" @click="test()">我的打卡</a>
+            </li>
+            <li>
+              <router-link to="/messageMenu">消息</router-link>
+            </li>
+            <!-- 方法名必须给() -->
+            <li @click="setLoginFlag(),setSelect3('1')" v-if="!showIsLogin">
+              <router-link to>登录</router-link>
+            </li>
+            <li @click="setLoginFlag(),setSelect3('2')" v-if="!showIsLogin">
+              <router-link to>注册</router-link>
+            </li>
+            <li v-if="showIsLogin" @click="showMineMenu()">
+              <router-link to="/mineMenu">{{showEmail}}</router-link>
+            </li>
+            <li v-if="showIsLogin" @click="logout()">
+              <router-link to="/main">注销</router-link>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <!-- 引号的方法后面不能加空号 -->
-    <loginBox
-      v-show="showLoginFlag"
-    ></loginBox>
+    <loginBox v-show="showLoginFlag"></loginBox>
   </div>
 </template>
 <script>
@@ -40,7 +40,7 @@ import registerRouter from "./LoginRegisterRouters/RegisterRouter";
 import findbackPassword from "./LoginRegisterRouters/FindbackPassword";
 import loginBox from "./LoginBox";
 
-import {mapState,mapGetters,mapActions} from 'vuex';
+import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
@@ -52,22 +52,28 @@ export default {
   data() {
     return {
       selected: null,
-      seesionIsLogin:false
+      seesionIsLogin: false
     };
   },
   computed: {
-    ...mapGetters(["showLoginFlag",'showEmail']),
-    
-    showIsLogin(){
-      if(sessionStorage.getItem('seesionIsLogin')){
-        this.$store.dispatch('setIsLogin',JSON.parse(sessionStorage.getItem('seesionIsLogin')))
-        this.$store.dispatch('setEmail',sessionStorage.getItem('seesionEmail'))
+    ...mapGetters(["showLoginFlag", "showEmail"]),
+
+    showIsLogin() {
+      if (sessionStorage.getItem("seesionIsLogin")) {
+        this.$store.dispatch(
+          "setIsLogin",
+          JSON.parse(sessionStorage.getItem("seesionIsLogin"))
+        );
+        this.$store.dispatch(
+          "setEmail",
+          sessionStorage.getItem("seesionEmail")
+        );
       }
-        return this.$store.getters.showIsLogin
+      return this.$store.getters.showIsLogin;
     }
   },
   methods: {
-    ...mapActions(["setLoginFlag",'setSelect3','setIsLogin']),
+    ...mapActions(["setLoginFlag", "setSelect3", "setIsLogin"]),
     choose: function(index) {
       this.selected = index;
     },
@@ -88,7 +94,7 @@ export default {
       let arr = [1, 2, 3];
       this.foo(...arr);
     }
-  },
+  }
   // created(){
   //   this.seesionIsLogin=sessionStorage.getItem('seesionIsLogin')
   // }
@@ -98,7 +104,9 @@ export default {
 /* ul.top_bar li.active {
   background-color: #000;
 } */
-
+.header-con {
+  width: 100%;
+}
 .header-con .nav {
   width: 100%;
   height: 90px;
@@ -108,9 +116,22 @@ export default {
   width: 1190px;
   height: 90px;
   margin: 0 auto;
-  /* border: 1px solid black; */
+  border: 1px solid black;
   color: #ffffff;
   font-weight: 300px;
+  background-image: linear-gradient(-90deg,#00d87d,#00db9d);
+}
+.header-con .nav .nav-con .ul-con{
+  width: 380px;
+  height: 92px;
+  float: right;
+}
+.header-con .nav .nav-con ul {
+  width: 380px;
+  height: 92px;
+  /* border: 1px solid black */
+}
+.header-con .nav .nav-con ul {
 }
 .header-con .nav .nav-con a span {
   color: #ffffff;
@@ -120,9 +141,6 @@ export default {
   line-height: 92px;
   font-weight: 900;
   padding-left: 50px;
-}
-.header-con .nav .nav-con ul {
-  float: right;
 }
 .header-con .nav .nav-con ul li {
   float: left;

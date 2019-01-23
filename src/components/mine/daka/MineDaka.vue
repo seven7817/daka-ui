@@ -9,6 +9,9 @@
           <router-link to="/mineMenu/mineDaka/dakaHistory">历史记录</router-link>
         </li>
       </ul>
+      <div>
+        <!-- <calendar></calendar> -->
+      </div>
     </div>
     <div class="right-content-con">
       <router-view></router-view>
@@ -16,7 +19,11 @@
   </div>
 </template>
 <script>
+import calendar from "@/components/Calendar";
 export default {
+  components: {
+    calendar
+  },
   data() {
     return {
       select: null
@@ -27,9 +34,8 @@ export default {
       console.log(index);
       this.select = index;
       sessionStorage.setItem("selectMineInfoItem", index);
-    },
-  },
-  
+    }
+  }
 };
 </script>
 <style scoped>
@@ -52,7 +58,6 @@ export default {
   border: 1px solid #ddd;
   line-height: 47px;
   text-align: center;
-  
 }
 .bottom-con .left-nav-con ul li a {
   width: 203px;

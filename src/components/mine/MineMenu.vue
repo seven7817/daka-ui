@@ -96,7 +96,7 @@ div.content-con div.mine-menu ul.mine-menu-ul li.active a {
   color: #ffffff;
 }
 .mine-menu-con {
-  width: 100%px;
+  width: 100%;
   height: 51px;
   /* border: 1px solid black; */
 }
