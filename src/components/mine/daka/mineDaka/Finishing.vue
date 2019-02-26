@@ -33,7 +33,7 @@
     <div class="right-con">
       <ul>
         <li v-for="finishing in finishingList">
-          <div class="record" @click="showDetail=true,showTop(finishing),showBottom()">
+          <div class="record" @click="showDetail=true,showTop(finishing),showDetailCalendar(finishing)">
             <div class="title">{{finishing.title}}</div>
             <div class="bottom">
               <div class="passed">已进行{{getPassed(finishing.startDate,finishing.timeInterval)}}次</div>
@@ -47,7 +47,7 @@
       </ul>
     </div>
     <div class="calendar-container">
-      <myCalendar></myCalendar>
+      <myCalendar :dakaTasks='dakaTasks'></myCalendar>
     </div>
   </div>
 </template>
@@ -70,7 +70,8 @@ export default {
       timeInterval: "",
       times: "",
       title: "",
-      dakaTasks: []
+      dakaTasks:null,
+      dateOfCalendarNedd:null,
     };
   },
   created() {
@@ -125,7 +126,20 @@ export default {
       this.times = finishing.times + "次";
       this.title = finishing.title;
     },
-    showBottom() {}
+    showDetailCalendar(finishing) {
+      
+      this.$axios
+      .post("/apis/daka/getDakaTasksByDakaId/", {
+        dakaId: finishing.id
+      })
+      .then(response => {
+        console.log(response.data[0].code);
+        console.log(response.data[0]);
+        this.dakaTasks = response.data[0].data;
+      });
+      
+
+    }
   }
 };
 </script>

@@ -1,6 +1,5 @@
 <template>
   <div class="calendar-con">
-    
     <div class="top-con">
       <div class="pre-year" @click="goPreYear()">&lt;&lt;</div>
       <div class="pre-month" @click="goPreMonth()">&lt;</div>
@@ -10,7 +9,7 @@
       <div class="next-year" @click="goNextYear()">&gt;&gt;</div>
     </div>
     <div class="day">
-      <ul >
+      <ul>
         <li>日</li>
         <li>一</li>
         <li>二</li>
@@ -25,7 +24,10 @@
         <li v-for="n in preBoxNum">{{n+preStart}}</li>
       </ul>
       <ul class="cur-date">
-        <li v-for="n in curBoxNum" :class="{isToday:isToday==n}">{{n}}</li>
+        <li
+          v-for="n in curBoxNum"
+          :class="{isToday:isToday==n,isFinished:datesState[n-1]==1,noFinished:datesState[n-1]==2,Finishing:datesState[n-1]==3,checking:datesState[n-1]==4}"
+        >{{n}}</li>
       </ul>
       <ul class="next-date">
         <li v-for="n in nextBoxNum">{{n}}</li>
@@ -39,15 +41,20 @@ export default {
     return {
       curYear: new Date().getFullYear(),
       curMonth: new Date().getMonth(),
-      preBoxNum: "",
-      preStart: "",
-      curBoxNum: "",
-      nextBoxNum: "",
-      indexYear: "",
-      indexMonth: "",
-      isToday: ""
+      preBoxNum: "", //第一段的盒子数
+      preStart: "", //第一个框应该显示的日期
+      curBoxNum: "", //这个月的盒子数
+      nextBoxNum: "", //下一个月的盒子数
+      isToday: "",
+      datesState: [
+        1,1,1,1,1,1,1,1,1,1,
+        1,1,1,1,1,1,1,1,1,1,
+        1,1,1,1,1,1,1,1,1,1,
+        1
+      ] //0表示无色，1表示未完成用红色,审核未通过也用红色，2表示已完成用绿色，3表示正在进行用黄色。4表示正在审核用灰色
     };
   },
+  props: ["dakaTasks"],
   created() {
     var date = new Date();
     //获得这个月的一号是星期几
@@ -65,6 +72,21 @@ export default {
     //初始化今天是哪天
     date = new Date();
     this.isToday = date.getDate();
+
+    console.log(this.dakaTasks);
+
+    for (var dakaTask; i < this.dakaTasks.length; i++) {
+      if(dakaTask.conmitDate.year==date.year){
+        if(dakaTask.conmitDate.month==date.month){
+          if(dakaTask.isPassed==0){
+            datesState[dakaTask.conmitDate.date-1]=4 //表示待审核
+          }
+          else if(dakaTask.isPassed==1){
+            datesState[dakaTask.conmitDate.date-1]=2  //表示审核通过
+          }
+        }
+      }
+    }
   },
   methods: {
     goPreMonth() {
@@ -74,7 +96,7 @@ export default {
       } else {
         this.curMonth -= 1;
       }
-      this.flushDate()
+      this.flushDate();
     },
     goNextMonth() {
       if (this.curMonth == 11) {
@@ -83,15 +105,15 @@ export default {
       } else {
         this.curMonth += 1;
       }
-      this.flushDate()
+      this.flushDate();
     },
     goPreYear() {
       this.curYear -= 1;
-      this.flushDate()
+      this.flushDate();
     },
-    goNextYear(){
+    goNextYear() {
       this.curYear += 1;
-      this.flushDate()
+      this.flushDate();
     },
     getWeekByYearAndMonth(year, month) {
       var date = new Date(year, month, 1);
@@ -114,7 +136,7 @@ export default {
         this.isToday = 0;
       }
     },
-    flushDate(){
+    flushDate() {
       this.preBoxNum = this.getWeekByYearAndMonth(this.curYear, this.curMonth);
       this.curBoxNum = this.getDaysByYearAndMonth(this.curYear, this.curMonth);
       this.nextBoxNum = 42 - this.preBoxNum - this.curBoxNum;
@@ -195,9 +217,20 @@ export default {
 .calendar-con .bottom-con .next-date li {
   color: rgb(150, 150, 150);
 }
-
 .calendar-con .bottom-con .cur-date .isToday {
   background-color: aqua;
+}
+.calendar-con .bottom-con .cur-date .isFinished {
+  background-color: chartreuse;
+}
+.calendar-con .bottom-con .cur-date .noFinished {
+  background-color: darkred;
+}
+.calendar-con .bottom-con .cur-date .Finishing {
+  background-color: gold;
+}
+.calendar-con .bottom-con .cur-date .checking{
+  background-color: gray;
 }
 </style>
 
