@@ -27,12 +27,14 @@
         <li
           v-for="n in curBoxNum"
           :class="{isToday:isToday==n,noFinished:datesState[n-1]==1,isFinished:datesState[n-1]==2,Finishing:datesState[n-1]==3,checking:datesState[n-1]==4}"
+          @click="showTaskDetail(n)"
         >{{n}}</li>
       </ul>
       <ul class="next-date">
         <li v-for="n in nextBoxNum" >{{n}}</li>
       </ul>
     </div>
+    
   </div>
 </template>
 <script>
@@ -73,47 +75,42 @@ export default {
     //初始化今天是哪天
     date = new Date();
     this.isToday = date.getDate();
-    
-    // for (var i = 0; i < this.dakaTasks.length; i++) {
-    //   if(dakaTasks[i].conmitDate.year==date.year){
-    //     if(dakaTasks[i].conmitDate.month==date.month){
-    //       if(dakaTasks[i].isPassed==0){
-    //         datesState[dakaTasks[i].conmitDate.date-1]=4 //表示待审核
-    //       }
-    //       else if(dakaTasks[i].isPassed==1){
-    //         datesState[dakaTasks[i].conmitDate.date-1]=2  //表示审核通过
-    //       }
-    //     }
-    //   }
-    // }
   },
    watch: {
     // 如果 `question` 发生改变，这个函数就会运行
-    finishing: function (newFinishing, oldQuestion) {
-      console.log('finishing')
-      console.log(this.finishing)
-      
-      console.log(this.finishing.id)
-      console.log(this.finishing.startDate.time)
-      console.log(this.finishing.timeInterval)
+      finishing: function (newFinishing, oldQuestion) {
+        console.log('finishing')
+        console.log(this.finishing)
+        
+        console.log(this.finishing.id)
+        console.log(this.finishing.startDate.time)
+        console.log(this.finishing.timeInterval)
 
-      this.$axios
-      .post("/apis/daka/getDakaTasksStateByDakaIdAndStartDateAndTimeInterval/", {
-        dakaId: this.finishing.id,
-        //2019-02-27 00:00:00
-        startDate:this.finishing.startDate.time/1000,
-        timeInterval:this.finishing.timeInterval
-      })
-      .then(response => {
-        console.log(response.data[0]);
-        console.log(response.data[0].code);
-        console.log(response.data[0].data)
-        this.allTasksState = response.data[0].data
-        this.updateCalendar(response.data[0].data)
-      });
+        this.$axios
+        .post("/apis/daka/getDakaTasksStateByDakaIdAndStartDateAndTimeInterval/", {
+          dakaId: this.finishing.id,
+          //2019-02-27 00:00:00
+          startDate:this.finishing.startDate.time/1000,
+          timeInterval:this.finishing.timeInterval
+        })
+        .then(response => {
+          console.log(response.data[0]);
+          console.log(response.data[0].code);
+          console.log(response.data[0].data)
+          this.allTasksState = response.data[0].data
+          this.updateCalendar(response.data[0].data)
+        });
     }
   },
   methods: {
+    //当用户点击日历上的日期的时候进行
+    showTaskDetail(n){
+      if(this.allTasksState!=null){
+        if(this.allTasksState[n-1]!=0){
+          this.$emit('showTaskDetail',this.curYear,this.curMonth,n)
+        }
+      }
+    },
     //变更日历的时候更新任务状态
     updateCalendarByDifferentDate(){
       if(this.allTasksState!=null){
@@ -127,51 +124,37 @@ export default {
       var curOrder = (date.getTime()- this.finishing.startDate.time)/(this.finishing.timeInterval*60*60*1000)
       curOrder = Math.ceil(curOrder)
       console.log('curOrder:'+curOrder)
-
       var newDatesState = [
         0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,
         0
       ]
+      
 
-      date.setHours(this.finishing.startDate.hours)
-      date.setMinutes(this.finishing.startDate.minutes)
-      date.setSeconds(this.finishing.startDate.seconds)
-      var deadLine = new Date().getTime() > this.finishing.startDate.time + this.finishing.timeInterval*60*60*1000*this.finishing.times ? this.finishing.startDate.time + this.finishing.timeInterval*60*60*1000*this.finishing.times:new Date().getTime()
+      var todayDeadDate = new Date()
+      todayDeadDate.setHours(0)
+      todayDeadDate.setMinutes(0)
+      todayDeadDate.setSeconds(0)
+      todayDeadDate.setDate(todayDeadDate.getDate()+1)
+
+      var deadLine = todayDeadDate.getTime() > this.finishing.startDate.time + this.finishing.timeInterval*60*60*1000*this.finishing.times ? this.finishing.startDate.time + this.finishing.timeInterval*60*60*1000*this.finishing.times:todayDeadDate.getTime()
       console.log('deadLine:'+deadLine)
       console.log('startDate.time'+this.finishing.startDate.time)
+      console.log('curBoxNum:'+this.curBoxNum)
       for(var i =1 ; i<= this.curBoxNum;i++){
-        console.log('curBoxNum:'+this.curBoxNum)
         console.log('num:'+i)
         date.setFullYear(this.curYear,this.curMonth,i)
         console.log('date:'+date.getTime())
 
-        if(this.finishing.startDate.time<=date.getTime() && date.getTime() < deadLine ){
+        if(this.finishing.startDate.time<date.getTime() && date.getTime() < deadLine ){
           var order = (date.getTime()- this.finishing.startDate.time)/(this.finishing.timeInterval*60*60*1000)
           order = Math.ceil(order)
           console.log('order:'+order)
           console.log(tasksState)
-          for(var j= 0;j<tasksState.length;j++){
-            console.log(tasksState[j][0]==order)
-            if(tasksState[j][0]==order){  //说明打卡了
-              if(tasksState[j][1]=='0'){  //说明待审核
-                newDatesState[i-1] = 4
-                break
-              }else if(tasksState[j][1]=='1'){  //表示通过
-                newDatesState[i-1] = 2 
-                break
-              }else if(tasksState[j][1]=='2'){  //表示没有通过
-                newDatesState[i-1] = 1
-                break
-              }
-            }else{  //说明没有打卡
-                newDatesState[i-1] = 1
-            }
-          }
-          // 1表示未完成用红色，审核未通过也用红色 2表示已完成用绿色，3表示正在进行用黄色。4表示正在审核用粉色 
-          if(order == curOrder){  //表名是正在进行打卡的周期
+          if(tasksState.length>0){
             for(var j= 0;j<tasksState.length;j++){
+              console.log(tasksState[j][0]==order)
               if(tasksState[j][0]==order){  //说明打卡了
                 if(tasksState[j][1]=='0'){  //说明待审核
                   newDatesState[i-1] = 4
@@ -183,15 +166,39 @@ export default {
                   newDatesState[i-1] = 1
                   break
                 }
-              }else{  //说明没有打卡需变成黄色，表正在进行
-                  newDatesState[i-1] = 3
               }
+              else{  //说明没有打卡
+                  newDatesState[i-1] = 1
+              }
+            }
+          }else{
+            newDatesState[i-1] = 1
+          }
+          // 1表示未完成用红色，审核未通过也用红色 2表示已完成用绿色，3表示正在进行用黄色。4表示正在审核用粉色 
+          if(order == curOrder){  //表名是正在进行打卡的周期
+            if(tasksState.length>0){
+               for(var j= 0;j<tasksState.length;j++){
+                if(tasksState[j][0]==order){  //说明打卡了
+                  if(tasksState[j][1]=='0'){  //说明待审核
+                    newDatesState[i-1] = 4
+                    break
+                  }else if(tasksState[j][1]=='1'){  //表示通过
+                    newDatesState[i-1] = 2 
+                    break
+                  }else if(tasksState[j][1]=='2'){  //表示没有通过
+                    newDatesState[i-1] = 1
+                    break
+                  }
+                }else{  //说明没有打卡需变成黄色，表正在进行
+                    newDatesState[i-1] = 3
+                }
+              }
+            }else{
+              newDatesState[i-1] = 3
             }
           }
         }
-
       }
-
       console.log(newDatesState)
       console.log(newDatesState)
       this.datesState = newDatesState
@@ -315,15 +322,19 @@ export default {
   height: 180px;
 }
 .calendar-con .bottom-con li {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
+  margin: 1px;
   float: left;
   text-align: center;
-  line-height: 30px;
+  line-height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 .calendar-con .bottom-con .pre-date li,
 .calendar-con .bottom-con .next-date li {
   color: rgb(150, 150, 150);
+  cursor:not-allowed;
 }
 
 

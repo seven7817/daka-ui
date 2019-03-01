@@ -17,18 +17,32 @@
           <div class="blank"></div>
           <div class="times">总的次数:{{times}}</div>
         </div>
-        <div class="bottom-con">
-          <div class="go-left"></div>
-          <div class="bottom-center-con">
-            <div class="task"></div>
-            <div class="task"></div>
-            <div class="task"></div>
-            <div class="task"></div>
-            <div class="task"></div>
-          </div>
-          <div class="go-right"></div>
-        </div>
       </div>
+      <div class="taskDetail" v-if="isShowTaskDetail">
+          <div class="close">
+            <div class="showClose" @click="isShowTaskDetail=false">X</div>
+          </div>
+          <div class="title-con">
+            {{finishing.title}}
+          </div>
+          <div class="time-range-con">
+            {{timeRange}}
+          </div>
+          <div class="uploadImg-con">
+            <div  class="imgs-con" >
+                <img v-for="url in imgURLList"  :src="url" alt=""  style="width: 100px;height: 80px"/>
+            </div>
+            <div class="upload-buton-con">
+              <div>最多只能上传5张图片</div>
+              <div>
+                <input type="file" multiple='true' accept="image/*" @change="tirggerFile($event)">
+              </div>
+
+            </div>
+            
+          </div>
+      </div>
+
     </div>
     <div class="right-con">
       <ul>
@@ -47,7 +61,47 @@
       </ul>
     </div>
     <div class="calendar-container" >
-      <myCalendar :finishing="finishing"></myCalendar>
+      <myCalendar :finishing="finishing" @showTaskDetail="showTaskDetail1"></myCalendar>
+      <div class="tips-con">
+        <ul>
+          <li class="li1">
+            <div class="color1">
+            </div>
+            <div>
+              正在审核
+            </div>
+          </li>
+          <li class="li2">
+            <div class="color2">
+            </div>
+            <div>
+              未打卡或者失败
+            </div>
+          </li>
+          <li class="li3">
+            <div class="color3">
+            </div>
+            <div>
+              今天
+            </div>
+          </li>
+          <li class="li4">
+            <div class="color4">
+            </div>
+            <div>
+              打卡完成
+            </div>
+          </li>
+          <li class="li5">
+            <div class="color5">
+            </div>
+            <div>
+              待完成
+            </div>
+          </li>
+         
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -58,6 +112,7 @@ export default {
   components: {
     pageHelper,
     myCalendar,
+    
   },
   data() {
     return {
@@ -73,8 +128,13 @@ export default {
       dakaTasks:null,
       dateOfCalendarNedd:null,
       finishing:null,
+      isShowTaskDetail: false,
+      timeRange:'',
+      imgURLList:null,
+      
     };
   },
+  
   created() {
     this.$axios
       .post("/apis/daka/getFinishing/", {
@@ -99,6 +159,55 @@ export default {
     }
   },
   methods: {
+    tirggerFile(event){
+      
+      var files = event.target.files;
+      console.log(files)
+      var imgFile = null;
+      var url = null ;
+      var imgURLlist = [];
+      if(files.length>0){
+        if(files.length>5){
+          for(var i =0 ; i<5;i++){
+            if (window.createObjectURL!=undefined) { // basic  
+              url = window.createObjectURL(files[i]) ;  
+            } else if (window.URL!=undefined) { // mozilla(firefox)  
+              url = window.URL.createObjectURL(files[i]) ;  
+            } else if (window.webkitURL!=undefined) { // webkit or chrome  
+              url = window.webkitURL.createObjectURL(files[i]) ;  
+            } 
+            imgURLlist[i] = url;
+          }
+        }else{
+          for(var i =0 ; i<files.length;i++){
+            if (window.createObjectURL!=undefined) { // basic  
+              url = window.createObjectURL(files[i]) ;  
+            } else if (window.URL!=undefined) { // mozilla(firefox)  
+              url = window.URL.createObjectURL(files[i]) ;  
+            } else if (window.webkitURL!=undefined) { // webkit or chrome  
+              url = window.webkitURL.createObjectURL(files[i]) ;  
+            } 
+            imgURLlist[i] = url;
+          }
+        }
+      }
+      this.imgURLList = imgURLlist;
+    },
+    showTaskDetail1(curYear,curMonth,n){
+      console.log(curYear)
+      console.log(curMonth)
+      console.log(n)
+      this.isShowTaskDetail=true
+      var date = new Date()
+      date.setFullYear(curYear,curMonth,n)
+      date.setHours(0)
+      date.setMinutes(0)
+      date.setSeconds(0)
+      var cycle= Math.ceil((date.getTime()-this.finishing.startDate.time)/(this.finishing.timeInterval*60*60*1000))
+      var date1= new Date(this.finishing.startDate.time+this.finishing.timeInterval*(cycle-1)*60*60*1000)
+      var date2= new Date(this.finishing.startDate.time+this.finishing.timeInterval*cycle*60*60*1000-1000)
+      this.timeRange= date1.toLocaleDateString()+'~'+date2.toLocaleDateString()
+    },
     getPassed(startDate, timeInterval) {
       if ((new Date() - startDate.time) / (1000 * 60 * 60 * timeInterval) < 0) {
         return 0;
@@ -128,20 +237,6 @@ export default {
       this.title = finishing.title;
       this.finishing = finishing;
     },
-    // showDetailCalendar(finishing) {
-      
-      // this.$axios
-      // .post("/apis/daka/getDakaTasksByDakaId/", {
-      //   dakaId: finishing.id
-      // })
-      // .then(response => {
-      //   console.log(response.data[0].code);
-      //   console.log(response.data[0]);
-      //   this.dakaTasks = response.data[0].data;
-      //   this.finishing = finishing;
-      // });
-      
-    // }
   }
 };
 </script>
@@ -159,10 +254,11 @@ export default {
   width: 600px;
   height: 450px;
   border: 1px solid #ddd;
-  background-image: url("http://img03.tooopen.com/uploadfile/downs/images/20110714/sy_20110714135215645030.jpg");
+  /* background-image: url("http://img03.tooopen.com/uploadfile/downs/images/20110714/sy_20110714135215645030.jpg"); */
   background-size: 100% 105%;
   opacity: 0.7;
   /* cursor: not-allowed */
+  position: relative;
 }
 .right-content-center .left-con .top-con {
   width: 500px;
@@ -197,57 +293,61 @@ export default {
   color: #000;
   margin-bottom: 50px;
 }
-.right-content-center .left-con .bottom-con {
-  width: 100%px;
-  height: 100px;
-  /* border: 1px solid black; */
-  margin-top: 30px;
+.right-content-center .left-con .taskDetail{
+  position: absolute;
+  width: 600px;
+  height: 450px;
+  background-color: aliceblue;
+  left: 0;
+  top: 0;
 }
-.right-content-center .left-con .bottom-con .go-left {
-  margin-top: 15px;
-  float: left;
-  width: 40px;
-  height: 72px;
-  background: url("http://s.stu.126.net/res/images/index/indexSlideArrow.png")
-    no-repeat;
-  background-position: 0 0;
-}
-.right-content-center .left-con .bottom-con .go-left:hover {
-  cursor: pointer;
-  background-position: 0 -95px;
-}
-.right-content-center .left-con .bottom-con .go-right {
-  margin-top: 15px;
-  float: right;
-  width: 40px;
-  height: 72px;
-  background: url("http://s.stu.126.net/res/images/index/indexSlideArrow.png")
-    no-repeat;
-  background-position: -66px 0;
-}
-.right-content-center .left-con .bottom-con .go-right:hover {
-  background-position: -66px -95px;
-  cursor: pointer;
-}
-.right-content-center .left-con .bottom-center-con {
-  width: 520px;
-  height: 100px;
-  /* border: 1px solid #000; */
-  margin: auto;
-  float: left;
-}
-.right-content-center .left-con .bottom-center-con .task {
-  width: 90px;
-  height: 90px;
+.right-content-center .left-con .taskDetail .close{
+  width: 100%;
+  height: 30px;
   border: 1px solid black;
-  float: left;
-  margin: 5px 6px;
 }
-.right-content-center .left-con .bottom-center-con .task:hover {
-  margin: 0px;
-  width: 100px;
-  height: 100px;
+.right-content-center .left-con .taskDetail .showClose{
+  height: 30px;
+  width: 30px;
+  float: right;
+  text-align: center;
+  line-height: 30px;
   cursor: pointer;
+}
+.right-content-center .left-con .taskDetail .title-con{
+  width: 100%;
+  height: 40px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 40px;
+}
+.right-content-center .left-con .taskDetail .time-range-con{
+  width: 100%;
+  height: 30px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 30px;
+}
+.right-content-center .left-con .taskDetail .uploadImg-con{
+  width: 100%;
+  height: 120px;
+  border: 1px solid black;
+}
+.right-content-center .left-con .taskDetail .imgs-con{
+  width: 100%;
+  height: 85px;
+  border: 1px solid black;
+}
+.right-content-center .left-con .taskDetail .upload-buton-con div{
+  float: left;
+  width: 300px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  color: red;
+  font-size: 12px;
 }
 .right-content-center .right-con {
   overflow: scroll;
@@ -308,10 +408,50 @@ export default {
 
 .right-content-center .calendar-container {
   width: 230px;
-  height: 265px;
+  height: 305px;
   /* background-color: aqua; */
   position: absolute;
   left: -260px;
   top: 130px;
+  
+}
+.right-content-center .calendar-container .tips-con{
+  width: 220px;
+  height: 60px;
+  margin-left: 8px;
+}
+.right-content-center .calendar-container .tips-con li{
+  float: left;
+  width: 110px;
+  height: 20px;
+}
+.right-content-center .calendar-container .tips-con li div{
+  font-size: 10px;
+  display: inline-block;
+}
+.right-content-center .calendar-container .tips-con li .color1{
+  width: 10px;
+  height: 10px;
+  background-color: darkgray;
+}
+.right-content-center .calendar-container .tips-con li .color2{
+  width: 10px;
+  height: 10px;
+  background-color: firebrick;
+}
+.right-content-center .calendar-container .tips-con li .color3{
+  width: 10px;
+  height: 10px;
+  background-color: aqua;
+}
+.right-content-center .calendar-container .tips-con li .color4{
+  width: 10px;
+  height: 10px;
+  background-color: chartreuse;
+}
+.right-content-center .calendar-container .tips-con li .color5{
+  width: 10px;
+  height: 10px;
+  background-color: gold;
 }
 </style>

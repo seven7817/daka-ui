@@ -24,7 +24,7 @@
       <div class="start-date-con">
         <div class="start-date-tips">开始日期：</div>
         <div class="start-date-cont">
-          <input type="datetime-local" v-model="startDate">
+          <input type="date" v-model="startDate">
         </div>
       </div>
       <div class="time-interval-con">
@@ -133,7 +133,7 @@ export default {
           Email: sessionStorage.getItem("seesionEmail"),
           dakaType: this.dakaType,
           title: this.title,
-          startDate: this.startDate,
+          startDate: this.startDate+'T00:00',
           timeInterval: this.timeInterval,
           times: this.times,
           moneyVeryTime: this.moneyVeryTime
