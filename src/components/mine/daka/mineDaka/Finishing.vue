@@ -205,8 +205,8 @@ export default {
       date.setSeconds(0)
       var cycle= Math.ceil((date.getTime()-this.finishing.startDate.time)/(this.finishing.timeInterval*60*60*1000))
       var date1= new Date(this.finishing.startDate.time+this.finishing.timeInterval*(cycle-1)*60*60*1000)
-      var date2= new Date(this.finishing.startDate.time+this.finishing.timeInterval*cycle*60*60*1000-1000)
-      this.timeRange= date1.toLocaleDateString()+'~'+date2.toLocaleDateString()
+      var date2= new Date(this.finishing.startDate.time+this.finishing.timeInterval*cycle*60*60*1000)
+      this.timeRange= date1.toLocaleString()+'~'+date2.toLocaleString()
     },
     getPassed(startDate, timeInterval) {
       if ((new Date() - startDate.time) / (1000 * 60 * 60 * timeInterval) < 0) {
