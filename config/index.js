@@ -19,7 +19,8 @@ module.exports = {
         pathRewrite: {
             '^/apis': ''   //需要rewrite重写的,
         }              
-      }
+      },
+      
     },
 
     // Various Dev Server settings
