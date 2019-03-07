@@ -1,6 +1,6 @@
 <template>
   <div class="right-content-center">
-    <div class="left-con" >
+    <div class="left-con">
       <div class="left-cont" v-if="showDetail">
         <div class="top-con">
           <div class="title">{{title}}</div>
@@ -26,29 +26,38 @@
         <div class="time-range-con">{{timeRange}}</div>
         <div class="uploadImg-con">
           <div class="imgs-con">
-            <img v-for="url in imgURLList" :src="url" alt style="width: 100px;height: 80px">
+            <img v-for="url in imgURLList" :src="url" onerror="this.style.display='none'" style="width: 100px;height: 85px;margin-right:20px;">
           </div>
           <div class="upload-buton-con">
             <div>最多只能上传5张图片</div>
             <div>
-              <input type="file" multiple="true" accept="image/*" @change="tirggerFile($event)" :disabled='!canSubmit'>
+              <input
+                type="file"
+                multiple="true"
+                accept="image/*"
+                @change="tirggerFile($event)"
+                :disabled="!canSubmit"
+              >
             </div>
+            <div>已上传: {{uploadTips}}</div>
           </div>
         </div>
         <div class="summary">
-          <textarea rows="3" cols="20" placeholder='小结(不超过200字)' maxlength='200' v-model="summaryStr" :disabled='!canSubmit' >
-          </textarea>
+          <textarea
+            rows="3"
+            cols="20"
+            placeholder="小结(不超过200字)"
+            maxlength="200"
+            v-model="summaryStr"
+            :disabled="!canSubmit"
+          ></textarea>
           <div class="showNum-con">
             <div class="showNum">{{summaryStr.length}}/200</div>
           </div>
         </div>
-        <div class="response-con">
-
-        </div>
-        <div class="submit-con"  >
-          <div class="submit" :class="{canSubmit : !canSubmit}" @click="submitTask()">
-          提 交
-          </div>
+        <div class="response-con">{{responseStr}}</div>
+        <div class="submit-con">
+          <div class="submit" :class="{canSubmit : !canSubmit}" @click="submitTask()">提 交</div>
         </div>
       </div>
     </div>
@@ -69,7 +78,7 @@
       </ul>
     </div>
     <div class="calendar-container">
-      <myCalendar :finishing="finishing" @showTaskDetail="showTaskDetail1"></myCalendar>
+      <myCalendar :finishing="finishing" :isUpdateCalendar="isUpdateCalendar" @showTaskDetail="showTaskDetail1" ></myCalendar>
       <div class="tips-con">
         <ul>
           <li class="li1">
@@ -122,10 +131,16 @@ export default {
       isShowTaskDetail: false,
       timeRange: "",
       imgURLList: null,
-      qiniuToken:'',
-      summaryStr:'',  //总结
-      canSubmit:null,
-      filesList:null,
+      qiniuToken: "",
+      summaryStr: "", //总结
+      canSubmit: null,
+      filesList: null,
+      filesAddress: [], //用于存储在七牛云上的地址
+      responseStr: "", //用于存储回复
+      choosedCycle: "", // 用户要提交的打卡任务的周期
+      uploadNum: 0, //用于显示上传的进度
+      uploadTips: "" ,//上传具体提示
+      isUpdateCalendar:false,  //再提交完成之后让日历更新一下状态
     };
   },
 
@@ -139,16 +154,12 @@ export default {
         console.log(response.data[0]);
         this.finishingList = response.data[0].data;
       });
-      //获取七牛云要的token先，因为，不先获取，会出现还没有获取token就先用token去上传文件的问题
-      this.$axios
-      .post("/apis/daka/getSimpleToken/", {
-      })
-      .then(response => {
-        console.log(response.data[0]);
-        this.qiniuToken = response.data[0].data;
-        console.log('qiniu1: '+this.qiniuToken)
-      });
-      
+    //获取七牛云要的token先，因为，不先获取，会出现还没有获取token就先用token去上传文件的问题
+    this.$axios.post("/apis/daka/getSimpleToken/", {}).then(response => {
+      console.log(response.data[0]);
+      this.qiniuToken = response.data[0].data;
+      console.log("qiniu1: " + this.qiniuToken);
+    });
   },
   computed: {
     getApplyDate() {
@@ -163,39 +174,59 @@ export default {
     }
   },
   methods: {
-    submitTask(){
-      var len = this.filesList.length > 5?5:this.filesList.length;
-      for(var i = 0 ; i <len ;i++){
-        this.uploadImgToqiniu(this.filesList[i])
-      }
+    submitTask() {
+      this.$axios
+        .post("/apis/daka/saveDakaTaskInfo/", {
+          filesAddress: this.filesAddress,
+          summary: this.summaryStr,
+          cycle: this.choosedCycle,
+          dakaId: this.finishing.id
+        })
+        .then(response => {
+          console.log(response);
+          if(response.data[0].code ==  0){
+            alert('提交成功')
+            this.isShowTaskDetail=false
+            this.isUpdateCalendar = !this.isUpdateCalendar
+          }
+          else{
+            alert('提交失败，请稍后尝试')
+          }
+        });
     },
-    uploadImgToqiniu(file){
+    uploadImgToqiniu(file, i, len) {
       var formData = new FormData();
       formData.append("file", file);
-      console.log('qiniu2: '+this.qiniuToken)
+      // console.log('qiniu2: '+this.qiniuToken)
       formData.append("token", this.qiniuToken); //在后台获取到7牛的token
-      let url1 = "pnu2yhiik.bkt.clouddn.com"; //自己公司，每个公司不一样
+      var url = "";
+      let url1 = "http://pnu2yhiik.bkt.clouddn.com"; //自己公司，每个公司不一样
       //这个上传地址应该是华南区特有
-      this.$axios 
+
+      this.$axios
         .post("https://upload-z2.qiniup.com", formData, {
           header: { "Content-Type": "multipart/form-data" }
         })
         .then(res => {
           if (res.status == 200) {
-            console.log(res) ; //返回的key跟自己公司的url拼接
-            console.log(res.data) ; //返回的key跟自己公司的url拼接
-            // console.log(res.data.hash) ; //返回的key跟自己公司的url拼接
-            console.log(res.data.key) ; //返回的key跟自己公司的url拼接
-            console.log(url1+'/'+res.data.key)
+            // console.log(res) ;
+            // console.log(res.data) ;
+            // console.log(res.data.key) ; //返回的key跟自己公司的url拼接
+            // console.log(url1+'/'+res.data.key)
+            // console.log('url'+url)
+            this.filesAddress[i] = url1 + "/" + res.data.key;
+            this.uploadNum = this.uploadNum + 1;
+            this.uploadTips = this.uploadNum + "/" + len;
           } else {
-            alert('上传失败')
+            alert("上传失败");
           }
         });
     },
     tirggerFile(event) {
+      this.uploadNum  = 0;
       var files = event.target.files;
       this.filesList = event.target.files;
-      console.log(files);
+      // console.log(files);
       var imgFile = null;
       var url = null;
       var imgURLlist = [];
@@ -229,53 +260,26 @@ export default {
             imgURLlist[i] = url;
           }
         }
+
+        var len = this.filesList.length > 5 ? 5 : this.filesList.length;
+        //上传图片
+        for (var i = 0; i < len; i++) {
+          this.uploadImgToqiniu(this.filesList[i], i, len);
+        }
       }
       this.imgURLList = imgURLlist;
-      //上传图片
-
-      // this.$axios
-      // .post("/apis/daka/getSimpleToken/", {
-        
-      // })
-      // .then(response => {
-      //   console.log(response.data[0].code);
-      //   console.log(response.data[0]);
-      //   this.qiniuToken = response.data[0].data;
-      //   console.log('qiniu: '+this.qiniuToken)
-      // });
-      
-      // var file = event.target.files[0];
-      // var formData = new FormData();
-      // formData.append("file", file);
-      // console.log('qiniu: '+this.qiniuToken)
-      // formData.append("token", this.qiniuToken); //在后台获取到7牛的token
-      // let url2 = "pnu2yhiik.bkt.clouddn.com"; //上传7牛的地址
-      // let url1 = "pnu2yhiik.bkt.clouddn.com"; //自己公司，每个公司不一样
-      // //这个上传地址应该是华南区特有
-      // this.$axios 
-      //   .post("https://upload-z2.qiniup.com", formData, {
-      //     header: { "Content-Type": "multipart/form-data" }
-      //   })
-      //   .then(res => {
-      //     if (res.status == 200) {
-      //       console.log(res) ; //返回的key跟自己公司的url拼接
-            
-      //     } else {
-      //       // Toast("头像上传失败，请重试");
-      //     }
-      //   });
     },
     showTaskDetail1(curYear, curMonth, n) {
-      console.log(curYear);
-      console.log(curMonth);
-      console.log(n);
+      // console.log(curYear);
+      // console.log(curMonth);
+      // console.log(n);
       this.isShowTaskDetail = true;
       var date = new Date();
       //今天的周期
       var todayCycle = Math.ceil(
         (date.getTime() - this.finishing.startDate.time) /
           (this.finishing.timeInterval * 60 * 60 * 1000)
-      )
+      );
       date.setFullYear(curYear, curMonth, n);
       date.setHours(0);
       date.setMinutes(0);
@@ -285,6 +289,8 @@ export default {
         (date.getTime() - this.finishing.startDate.time) /
           (this.finishing.timeInterval * 60 * 60 * 1000)
       );
+      this.choosedCycle = cycle;
+
       var date1 = new Date(
         this.finishing.startDate.time +
           this.finishing.timeInterval * (cycle - 1) * 60 * 60 * 1000
@@ -293,17 +299,62 @@ export default {
         this.finishing.startDate.time +
           this.finishing.timeInterval * cycle * 60 * 60 * 1000
       );
-      this.timeRange = date1.toLocaleString() + "~" + date2.toLocaleString();
-      //如果选择的周期小于今天的周期，就应该不能让用户修改打卡信息
-      if(cycle<todayCycle){
-        this.canSubmit = false;
-      }else{
-        this.canSubmit = true;
-      }
-      
+      //去服务器查询需要的打卡任务信息
+      this.$axios
+        .post("/apis/daka/getDakaTaskInfo/", {
+          cycle: this.choosedCycle,
+          dakaId: this.finishing.id
+        })
+        .then(response => {
+          console.log(response);
+          console.log(response.data[0].data);
+          if (response.data[0].data == null) {
+            this.canSubmit = true;
+          } else {
+            console.log(11111);
+            this.canSubmit = false;
+          }
+          this.timeRange =
+            date1.toLocaleString() +
+            "~" +
+            date2.toLocaleString() +
+            "  第" +
+            this.choosedCycle +
+            "次";
+
+          //如果选择的周期小于今天的周期，就应该不能让用户修改打卡信息
+          if (cycle < todayCycle) {
+            console.log(22222);
+            console.log(cycle);
+            console.log(todayCycle);
+            this.canSubmit = false;
+          }
+          if(response.data[0].data==null){
+            this.imgURLList = null
+            this.response =''
+            this.summaryStr = ''
+          }
+          else{
+            var list = new Array()
+            list[0] =  response.data[0].data.img1
+            list[1] =  response.data[0].data.img2
+            list[2] =  response.data[0].data.img3
+            list[3] =  response.data[0].data.img4
+            list[4] =  response.data[0].data.img5
+            // for(var i = 0; i<list.length;i++){
+            //   if(list[i]==''){
+            //     list.
+            //   }
+            // }
+            this.imgURLList = list
+            this.response = response.data[0].data.response
+            this.summaryStr = response.data[0].data.summary
+          }
+          this.responseStr = response.data[0].data.response
 
 
-
+          
+        });
     },
     getPassed(startDate, timeInterval) {
       if ((new Date() - startDate.time) / (1000 * 60 * 60 * timeInterval) < 0) {
@@ -440,45 +491,45 @@ export default {
 }
 .right-content-center .left-con .taskDetail .upload-buton-con div {
   float: left;
-  width: 300px;
+  width: 200px;
   height: 35px;
   line-height: 35px;
   text-align: center;
   color: red;
   font-size: 12px;
 }
-.right-content-center .left-con .taskDetail .summary{
+.right-content-center .left-con .taskDetail .summary {
   margin-top: 10px;
   width: 600px;
   height: 100px;
 }
-.right-content-center .left-con .taskDetail .summary .showNum-con{
+.right-content-center .left-con .taskDetail .summary .showNum-con {
   width: 600px;
   height: 20px;
 }
-.right-content-center .left-con .taskDetail .summary textarea{
+.right-content-center .left-con .taskDetail .summary textarea {
   width: 600px;
-  height:80px;
+  height: 80px;
 }
-.right-content-center .left-con .taskDetail .summary .showNum{
+.right-content-center .left-con .taskDetail .summary .showNum {
   font-size: 10px;
-  float:right;
+  float: right;
 }
-.right-content-center .left-con .taskDetail .response-con{
+.right-content-center .left-con .taskDetail .response-con {
   margin-top: 10px;
   width: 600px;
   height: 50px;
   box-sizing: border-box;
   border: 1px solid black;
 }
-.right-content-center .left-con .taskDetail .submit-con{
+.right-content-center .left-con .taskDetail .submit-con {
   position: relative;
   margin-top: 20px;
   width: 600px;
   height: 30px;
   /* border: 1px solid black; */
 }
-.right-content-center .left-con .taskDetail .submit{
+.right-content-center .left-con .taskDetail .submit {
   position: absolute;
   width: 120px;
   height: 30px;
@@ -490,7 +541,7 @@ export default {
   cursor: pointer;
   background-color: #10ae58;
 }
-.right-content-center .left-con .taskDetail .submit{
+.right-content-center .left-con .taskDetail .submit {
   position: absolute;
   width: 120px;
   height: 30px;
@@ -502,19 +553,10 @@ export default {
   cursor: pointer;
   background-color: #10ae58;
 }
-.right-content-center .left-con .taskDetail .submit.canSubmit{
-  background-color:darkgray;
-  cursor:not-allowed;
- 
+.right-content-center .left-con .taskDetail .submit.canSubmit {
+  background-color: darkgray;
+  cursor: not-allowed;
 }
-
-
-
-
-
-
-
-
 
 .right-content-center .right-con {
   overflow: scroll;
