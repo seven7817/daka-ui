@@ -2,7 +2,7 @@
   <div class="header-con">
     <div class="nav">
       <div class="nav-con">
-        <router-link to="/main">
+        <router-link to="/">
           <span>打卡系统</span>
         </router-link>
         <div class="ul-con">
@@ -24,7 +24,7 @@
               <router-link to="/mineMenu">{{showEmail}}</router-link>
             </li>
             <li v-if="showIsLogin" @click="logout()">
-              <router-link to="/main">注销</router-link>
+              <router-link to="/">注销</router-link>
             </li>
           </ul>
         </div>
@@ -122,12 +122,12 @@ export default {
   background-image: linear-gradient(-90deg,#00d87d,#00db9d);
 }
 .header-con .nav .nav-con .ul-con{
-  width: 380px;
+  /* width: 380px; */
   height: 92px;
   float: right;
 }
 .header-con .nav .nav-con ul {
-  width: 380px;
+  /* width: 380px; */
   height: 92px;
   /* border: 1px solid black */
 }

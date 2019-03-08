@@ -1,34 +1,54 @@
 <template>
   <div class="main-cont-left">
-    <div class="msg">
-      <div class="responseNum">100</div>
-      <div class="msg-cont">
-        <div class="msgTitle">标题</div>
-        <div class="msgTime-con">
-          <div class="msgTime">时间</div>
+    <div class="top">
+      <div class="msg" v-for="dakaInfo in dakaInfoList">
+        <div class="responseNum">标题:</div>
+        <div class="msg-cont">
+          <div class="msgTitle">{{dakaInfo.title}}</div>
+          <div class="msgTime-con">
+            <div class="msgTime">时间{{modifyDate(dakaInfo.applyDate)}}</div>
+            <div class="username">{{dakaInfo.email}}：</div>
+          </div>
         </div>
+        <!-- <vue-qr text="Hello world!" :callback="test" qid="testid"></vue-qr> -->
       </div>
-      <!-- <vue-qr text="Hello world!" :callback="test" qid="testid"></vue-qr> -->
+    </div>
+    <div class="bottom">
+      <pageHelper></pageHelper>
     </div>
   </div>
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 import VueQr from "vue-qr";
-
+import pageHelper from "@/components/pageHelper";
 export default {
-  components: { VueQr },
-
+  components: { 
+    VueQr,
+    pageHelper
+   },
   data() {
     return {
-      clock:null
+      clock: null,
+      dakaInfoList: ""
     };
+  },
+  created() {
+    this.$axios.post("/apis/daka/getAllDakaInfo/", {}).then(response => {
+      console.log(response.data[0].code), console.log(response.data[0]);
+      this.dakaInfoList = response.data[0].data[0];
+    });
   },
   computed: {
     ...mapGetters(["showApplyDakaFlag"])
   },
   methods: {
     ...mapActions(["setLoginFlag", "setSelect3"]),
+    modifyDate(date) {
+      var d = new Date();
+      d.setTime(date.time);
+      return d.toLocaleString();
+    }
   }
 };
 </script>
@@ -44,16 +64,30 @@ export default {
   width: 890px;
   border: 1px solid #000;
 }
+.main-cont-left .top{
+  width: 100%;
+  height: 427px;
+  /* border: 1px solid black; */
+}
 .main-cont-left .msg {
   width: 100%;
   height: 60px;
-  border: 1px solid black;
+  border: 1px solid #aaa;
+  box-sizing: border-box;
+   margin-bottom: 1px;
 }
+.main-cont-left .bottom{
+  margin-top: 18px;
+  width: 350px;
+  height: 30px;
+  margin-left: calc(50% - 175px);
+}
+
 .main-cont-left .msg .responseNum {
   float: left;
   width: 50px;
   height: 30px;
-  margin-right: 20px;
+  margin-right: 10px;
   border: 1px solid #ddd;
   font-size: 12px;
   color: #333;
@@ -63,7 +97,7 @@ export default {
 }
 .main-cont-left .msg .msg-cont {
   float: right;
-  width: 800px;
+  width: 820px;
   height: 100%;
   /* border: 1px solid black; */
 }
@@ -71,12 +105,19 @@ export default {
   float: right;
   width: 100%;
   height: 60%;
+  line-height: 36px;
   /* border: 1px solid black; */
 }
 .main-cont-left .msg .msgTime-con {
+  font-size: 12px;
   float: right;
   width: 100%;
   height: 40%;
+  color: rgb(128, 121, 121);
+}
+.main-cont-left .msg .msgTime-con .username {
+  float: right;
+  height: 100%;
 }
 .main-cont-left .msg .msgTime-con .msgTime {
   float: right;

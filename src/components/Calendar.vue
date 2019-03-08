@@ -94,6 +94,7 @@ export default {
     date.setDate(0); 
     this.preStart = date.getDate() - this.preBoxNum;
     //获得这个月有几天
+    date.setDate(1);   //把date设置为1的目的是为了让如果当月有三十一日的时候月份加2的话不一定那个月有三十一天，可能会出错
     date.setMonth(date.getMonth() + 2);
     date.setDate(0);
     // date = new Date(2019,3,0)   //这个初始值是3月份的第零天，就表示上个月的最后一天

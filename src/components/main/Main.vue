@@ -20,7 +20,15 @@
         <router-view></router-view>
         <applyDaka v-if="showApplyDakaFlag"></applyDaka>
         <div class="main-cont-right">
-          <div class="userInfo-con"></div>
+          <div class="userInfo-con">
+            <div class="userinfo-cont" v-if="showIsLogin">
+              <div class="tips">尊敬的用户:</div>
+              <div class="email">{{email}}</div> 
+              <div class="ingNum">您正在完成的打卡数量为:{{ingNum}}</div>
+              <div class="hadNum">您已经完成的打卡数量为:{{hadNum}}</div>
+            </div>
+            <div v-else class="loginTips" @click="login()">请先登录</div>
+          </div>
           <div class="apply-daka-con">
             <div class="apply-daka" v-on:click="applyDaka()">申请打卡</div>
           </div>
@@ -38,11 +46,31 @@ export default {
   },
   data() {
     return {
-      select: null
+      select: null,
+      email: "",
+      hadNum: 0, //已经完成的打卡数量
+      ingNum: 0 //正在完成的打卡数
     };
   },
+  watch: {
+    showIsLogin(newValue, oldValue) {
+      if (sessionStorage.getItem("seesionEmail")!=null) {
+        this.$axios
+          .post("/apis/daka/getUserNumsOfDaka/", {
+            Email: sessionStorage.getItem("seesionEmail")
+          })
+          .then(response => {
+            console.log(response.data[0].code),
+              console.log(response.data[0]),
+              (this.ingNum = response.data[0].data[0]);
+            this.hadNum = response.data[0].data[1];
+            this.email = sessionStorage.getItem("seesionEmail");
+          });
+      }
+    }
+  },
   computed: {
-    ...mapGetters(["showApplyDakaFlag"])
+    ...mapGetters(["showApplyDakaFlag", "showIsLogin"])
   },
   methods: {
     ...mapActions(["setLoginFlag", "setSelect3", "setApplyDakaFlag"]),
@@ -51,6 +79,10 @@ export default {
       this.select = index;
       sessionStorage.setItem("selectMineMenuItem", index);
       sessionStorage.setItem("selectBaseInfo", "1");
+    },
+    login() {
+      this.setLoginFlag();
+      this.setSelect3("1");
     },
     applyDaka() {
       if (sessionStorage.getItem("seesionIsLogin") != "true") {
@@ -61,14 +93,27 @@ export default {
         this.setApplyDakaFlag();
       }
     },
-    test(){
-      var date = new Date()
-      console.log(date.getTime())
-    } 
+    test() {
+      var date = new Date();
+      console.log(date.getTime());
+    }
   },
   created() {
     if (sessionStorage.getItem("selectMineMenuItem")) {
       this.select = sessionStorage.getItem("selectMineMenuItem");
+    }
+    this.email = sessionStorage.getItem("seesionEmail");
+    if (this.email != null) {
+      this.$axios
+        .post("/apis/daka/getUserNumsOfDaka/", {
+          Email: sessionStorage.getItem("seesionEmail")
+        })
+        .then(response => {
+          console.log(response.data[0].code),
+            console.log(response.data[0]),
+            (this.ingNum = response.data[0].data[0]);
+          this.hadNum = response.data[0].data[1];
+        });
     }
   }
 };
@@ -146,6 +191,52 @@ div.main-con div.main-nav ul.main-nav-ul li.dingwei {
   width: 100%;
   height: 60%;
   border: 1px solid black;
+  position: relative;
+}
+.main-con .main-cont-right .userInfo-con .userinfo-cont{
+  width: 270px;
+  height: 250px;
+  /* border: 1px solid black; */
+  margin-left: 15px;
+  margin-top: 20px;
+}
+
+.main-con .main-cont-right .userInfo-con .userinfo-cont .hadNum,
+.main-con .main-cont-right .userInfo-con .userinfo-cont .ingNum,
+.main-con .main-cont-right .userInfo-con .userinfo-cont .email{
+  width: 250px;
+  height: 30px;
+  /* border: 1px solid black; */
+  font-size: 17px;
+  font-weight: bolder;
+  line-height: 20px;
+  margin-top: 30px;
+  margin-left: 1em;
+}
+.main-con .main-cont-right .userInfo-con .userinfo-cont .tips{
+  width: 250px;
+  height: 30px;
+  /* border: 1px solid black; */
+  font-size: 17px;
+  font-weight: bolder;
+  line-height: 20px;
+  margin-top: 20px;
+}
+.main-con .main-cont-right .userInfo-con .loginTips {
+  margin: auto;
+  height: 25px;
+  width: 100px;
+  text-align: center;
+  line-height: 25px;
+  background-color: #28a745;
+  color: #fff;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -50px;
+  cursor: pointer;
+  font-weight: bold;
 }
 .main-con .main-cont-right .apply-daka-con {
   width: 100%;

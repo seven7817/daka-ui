@@ -29,7 +29,7 @@ export const routes = [
     },
     { path: '/MessageMenu', component: MessageMenu },
     {
-        path: '/main', component: Main, children: [
+        path: '/', component: Main, redirect: '/main/byMyself',children: [
             { path: '/main/byMyself', component: ByMyself },
             { path: '/main/bySystem', component: BySystem },
         ]
