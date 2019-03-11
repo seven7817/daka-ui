@@ -331,8 +331,9 @@ export default {
           }
           if(response.data[0].data==null){
             this.imgURLList = null
-            this.response =''
+            this.responseStr =''
             this.summaryStr = ''
+            
           }
           else{
             var list = new Array()

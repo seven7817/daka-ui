@@ -116,7 +116,7 @@ export default {
   width: 1190px;
   height: 90px;
   margin: 0 auto;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   color: #ffffff;
   font-weight: 300px;
   background-image: linear-gradient(-90deg,#00d87d,#00db9d);
@@ -130,8 +130,6 @@ export default {
   /* width: 380px; */
   height: 92px;
   /* border: 1px solid black */
-}
-.header-con .nav .nav-con ul {
 }
 .header-con .nav .nav-con a span {
   color: #ffffff;
@@ -155,7 +153,7 @@ export default {
 .login-frame {
   width: 440px;
   height: 400px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   z-index: 10;
   position: fixed;
   left: 50%;

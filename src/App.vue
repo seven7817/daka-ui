@@ -6,7 +6,11 @@
     <div class="content">
       <Content ></Content>
     </div>
-    <div class="foot">by sun</div>
+    <div class="foot">
+      <div class="foot-con">
+        by sun
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -46,12 +50,24 @@ export default {
 .content {
   width: 100%;
   height: 530px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 .foot {
+  margin-top: 12px;
   width: 100%;
   height: 100px;
-  border: 1px solid black;
-  
+  /* border: 1px solid black; */
+  background-image: linear-gradient(-90deg,#00d87d,#00db9d);
+}
+.foot-con{
+  width: 1190px;
+  height: 100px;
+  margin: 0 auto;
+  /* border: 1px solid black; */
+  color: #ffffff;
+  font-weight: 300px;
+  background-image: linear-gradient(-90deg,#00d87d,#00db9d);
+  text-align: center;
+  line-height: 100px;
 }
 </style>

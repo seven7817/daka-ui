@@ -13,8 +13,8 @@
         <!-- <vue-qr text="Hello world!" :callback="test" qid="testid"></vue-qr> -->
       </div>
     </div>
-    <div class="bottom">
-      <pageHelper></pageHelper>
+    <div class="bottom">                                     
+      <pageHelper :curPage='curpage' :total='totalpageNum'   @getPageInfo='getPageInfo'></pageHelper>
     </div>
   </div>
 </template>
@@ -30,13 +30,18 @@ export default {
   data() {
     return {
       clock: null,
-      dakaInfoList: ""
+      dakaInfoList: "",
+      curpage:0,
+      totalpageNum:0,
     };
   },
   created() {
     this.$axios.post("/apis/daka/getAllDakaInfo/", {}).then(response => {
-      console.log(response.data[0].code), console.log(response.data[0]);
+      console.log(response.data[0].code);
+      console.log(response.data[0]);
       this.dakaInfoList = response.data[0].data[0];
+      this.curpage = 1;
+      this.totalpageNum = Math.ceil(response.data[0].data[1]/7); 
     });
   },
   computed: {
@@ -44,6 +49,20 @@ export default {
   },
   methods: {
     ...mapActions(["setLoginFlag", "setSelect3"]),
+    //分页组件出发事件调用的方法
+    getPageInfo(pageNumStr){
+      this.$axios.post("/apis/daka/getDakaInfoOfPage/", {
+        pageNum:pageNumStr
+      }).then(response => {
+      this.curpage = pageNumStr;
+      // console.log(response.data[0].code);
+      // console.log(response.data[0]);
+      this.dakaInfoList = response.data[0].data;
+
+    });
+
+
+    },
     modifyDate(date) {
       var d = new Date();
       d.setTime(date.time);
@@ -63,6 +82,7 @@ export default {
   height: 100%;
   width: 890px;
   border: 1px solid #000;
+  box-sizing: border-box;
 }
 .main-cont-left .top{
   width: 100%;

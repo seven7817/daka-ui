@@ -5,8 +5,8 @@
     <div class="goNext" :class="{ative:!canGoNext}" @click="canGoNext&&goNext()">下一页</div>
     <div class="last" @click="goLastPage()">尾页</div>
     <div class="currentPage">{{curPage}}/{{total}}</div>
-    <div class="jump">跳转到 </div>
-    <div class="want-to-jump-con" @click="canGoLast&&goYourWant()">
+    <div class="jump" @click="goYourWant()">跳转到 </div>
+    <div class="want-to-jump-con">
       <input type="text" class="want-to-jump" v-model="wantToJump"> 页
     </div>
   </div>
@@ -25,7 +25,13 @@ export default {
             canGoLast:''
         }
     },
+    //当前页数，总页数
     props:['curPage',"total"],
+    watch:{
+        curPage(){
+            this.initPager()
+        }
+    },
     methods:{
         goFirstPage(){
             this.$emit('getPageInfo',1)
@@ -41,22 +47,22 @@ export default {
         },
         goYourWant(){
             if(this.wantToJump && /[1-9][0-9]*/.test(this.wantToJump)){             
-                var pg = parseInt(this.wantToJump)
-                if(pg > 0 && pg <= this.pageSize){
-                    this.$emit('setPage', pg ) //调用父组件方法
+                if(this.wantToJump > 0 && this.wantToJump <= this.total){
+                    this.$emit('getPageInfo', this.wantToJump ) //调用父组件方法
                 }else{
-                    this.gotoPage = ""
-                    alert('请输入正确的数字')
+                    this.wantToJump = ""
+                    alert('请输入正确的页数')
                 }
             }else{
-                this.gotoPage = ""
+                this.wantToJump = ""
                 alert('请输入正确的数字')
             }
         },
         initPager(){
             this.canGoFirst = this.curPage> 1
             this.canGoLast = this.curPage< this.total
-
+            // console.log(this.curPage)
+            // console.log(this.total)
             this.canBackBefore = this.curPage> 1
             this.canGoNext = this.curPage< this.total
         }
@@ -95,7 +101,7 @@ export default {
   text-align: center;
 }
 .pageHelper .want-to-jump-con .want-to-jump {
-  width: 15px;
+  width: 22px;
 }
 .pageHelper .active{
     cursor: not-allowed

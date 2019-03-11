@@ -124,21 +124,21 @@ export default {
   height: 100%;
 }
 .main-nav-con {
-  width: 100%px;
+  width: 100%;
   height: 51px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 .main-nav-con .main-nav {
   width: 1190px;
   height: 51px;
   margin: 0 auto;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   background-color: #ffffff;
 }
-.main-con .main-nav-con .main-nav .main-nav-ul-ul {
+.main-con .main-nav-con .main-nav .main-nav-ul {
   /* width: 100%px; */
   height: 51px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 div.main-con div.main-nav ul.main-nav-ul li.active,
 div.main-con div.main-nav ul.main-nav-ul li.active a {
@@ -173,6 +173,7 @@ div.main-con div.main-nav ul.main-nav-ul li.dingwei {
   height: 90%;
   border: 1px solid black;
   position: relative;
+  box-sizing: border-box;
 }
 .main-con .main-cont-con .main-cont {
   width: 1190px;
@@ -186,12 +187,14 @@ div.main-con div.main-nav ul.main-nav-ul li.dingwei {
   height: 100%;
   width: 290px;
   border: 1px solid #000;
+  box-sizing: border-box;
 }
 .main-con .main-cont-right .userInfo-con {
   width: 100%;
   height: 60%;
   border: 1px solid black;
   position: relative;
+  box-sizing: border-box;
 }
 .main-con .main-cont-right .userInfo-con .userinfo-cont{
   width: 270px;
@@ -243,6 +246,7 @@ div.main-con div.main-nav ul.main-nav-ul li.dingwei {
   height: 40%;
   border: 1px solid black;
   position: relative;
+  box-sizing: border-box;
 }
 .main-con .main-cont-right .apply-daka-con .apply-daka {
   margin: auto;
