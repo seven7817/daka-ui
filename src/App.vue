@@ -16,7 +16,6 @@
 <script>
 import Header from './components/Header'
 import Content from './components/Content'
-// import sunzheng from './components/sunzheng'
 export default {
   name: "App",
   components: {
@@ -55,13 +54,14 @@ export default {
 .foot {
   margin-top: 12px;
   width: 100%;
-  height: 100px;
+  height: calc(100% - 634px) ;
   /* border: 1px solid black; */
   background-image: linear-gradient(-90deg,#00d87d,#00db9d);
+  min-height: 100px;
 }
 .foot-con{
   width: 1190px;
-  height: 100px;
+  height: 100%;
   margin: 0 auto;
   /* border: 1px solid black; */
   color: #ffffff;
