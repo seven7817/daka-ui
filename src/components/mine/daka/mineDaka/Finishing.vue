@@ -26,7 +26,12 @@
         <div class="time-range-con">{{timeRange}}</div>
         <div class="uploadImg-con">
           <div class="imgs-con">
-            <img v-for="url in imgURLList" :src="url" onerror="this.style.display='none'" style="width: 100px;height: 85px;margin-right:20px;">
+            <img
+              v-for="url in imgURLList"
+              :src="url"
+              onerror="this.style.display='none'"
+              style="width: 100px;height: 85px;margin-right:20px;"
+            >
           </div>
           <div class="upload-buton-con">
             <div>最多只能上传5张图片</div>
@@ -78,7 +83,11 @@
       </ul>
     </div>
     <div class="calendar-container">
-      <myCalendar :finishing="finishing" :isUpdateCalendar="isUpdateCalendar" @showTaskDetail="showTaskDetail1" ></myCalendar>
+      <myCalendar
+        :finishing="finishing"
+        :isUpdateCalendar="isUpdateCalendar"
+        @showTaskDetail="showTaskDetail1"
+      ></myCalendar>
       <div class="tips-con">
         <ul>
           <li class="li1">
@@ -139,8 +148,8 @@ export default {
       responseStr: "", //用于存储回复
       choosedCycle: "", // 用户要提交的打卡任务的周期
       uploadNum: 0, //用于显示上传的进度
-      uploadTips: "" ,//上传具体提示
-      isUpdateCalendar:false,  //再提交完成之后让日历更新一下状态
+      uploadTips: "", //上传具体提示
+      isUpdateCalendar: false //再提交完成之后让日历更新一下状态
     };
   },
 
@@ -184,13 +193,12 @@ export default {
         })
         .then(response => {
           console.log(response);
-          if(response.data[0].code ==  0){
-            alert('提交成功')
-            this.isShowTaskDetail=false
-            this.isUpdateCalendar = !this.isUpdateCalendar
-          }
-          else{
-            alert('提交失败，请稍后尝试')
+          if (response.data[0].code == 0) {
+            alert("提交成功");
+            this.isShowTaskDetail = false;
+            this.isUpdateCalendar = !this.isUpdateCalendar;
+          } else {
+            alert("提交失败，请稍后尝试");
           }
         });
     },
@@ -223,7 +231,7 @@ export default {
         });
     },
     tirggerFile(event) {
-      this.uploadNum  = 0;
+      this.uploadNum = 0;
       var files = event.target.files;
       this.filesList = event.target.files;
       // console.log(files);
@@ -306,13 +314,26 @@ export default {
           dakaId: this.finishing.id
         })
         .then(response => {
-          console.log(response);
-          console.log(response.data[0].data);
+          // console.log(response);
+          // console.log(response.data[0].data);
           if (response.data[0].data == null) {
             this.canSubmit = true;
+            this.imgURLList = null;
+            this.responseStr = "";
+            this.summaryStr = "";
           } else {
-            console.log(11111);
+            // console.log(11111);
             this.canSubmit = false;
+            var list = new Array();
+            list[0] = response.data[0].data.img1;
+            list[1] = response.data[0].data.img2;
+            list[2] = response.data[0].data.img3;
+            list[3] = response.data[0].data.img4;
+            list[4] = response.data[0].data.img5;
+            this.imgURLList = list;
+            this.response = response.data[0].data.response;
+            this.summaryStr = response.data[0].data.summary;
+            this.responseStr = response.data[0].data.response;
           }
           this.timeRange =
             date1.toLocaleString() +
@@ -324,37 +345,11 @@ export default {
 
           //如果选择的周期小于今天的周期，就应该不能让用户修改打卡信息
           if (cycle < todayCycle) {
-            console.log(22222);
-            console.log(cycle);
-            console.log(todayCycle);
+            // console.log(22222);
+            // console.log(cycle);
+            // console.log(todayCycle);
             this.canSubmit = false;
           }
-          if(response.data[0].data==null){
-            this.imgURLList = null
-            this.responseStr =''
-            this.summaryStr = ''
-            
-          }
-          else{
-            var list = new Array()
-            list[0] =  response.data[0].data.img1
-            list[1] =  response.data[0].data.img2
-            list[2] =  response.data[0].data.img3
-            list[3] =  response.data[0].data.img4
-            list[4] =  response.data[0].data.img5
-            // for(var i = 0; i<list.length;i++){
-            //   if(list[i]==''){
-            //     list.
-            //   }
-            // }
-            this.imgURLList = list
-            this.response = response.data[0].data.response
-            this.summaryStr = response.data[0].data.summary
-          }
-          this.responseStr = response.data[0].data.response
-
-
-          
         });
     },
     getPassed(startDate, timeInterval) {
