@@ -7,14 +7,24 @@
           <div class="msgTitle">{{dakaInfo.title}}</div>
           <div class="msgTime-con">
             <div class="msgTime">时间{{modifyDate(dakaInfo.applyDate)}}</div>
-            <div class="username">{{dakaInfo.email}}：</div>
+            <div
+              class="username"
+              @mouseenter="showApplyFriendFrame(dakaInfo)"
+              @mouseleave="showApplyFrindFrame=false"
+            >
+              {{dakaInfo.email}}：
+              <div
+                class="applyFriend"
+                v-if="showApplyFrindFrame&&dakaInfo==applyFriendDakaInfo"
+                @click="applyFriend()"
+              >申请好友</div>
+            </div>
           </div>
         </div>
-        <!-- <vue-qr text="Hello world!" :callback="test" qid="testid"></vue-qr> -->
       </div>
     </div>
-    <div class="bottom">                                     
-      <pageHelper :curPage='curpage' :total='totalpageNum'   @getPageInfo='getPageInfo'></pageHelper>
+    <div class="bottom">
+      <pageHelper :curPage="curpage" :total="totalpageNum" @getPageInfo="getPageInfo"></pageHelper>
     </div>
   </div>
 </template>
@@ -23,16 +33,19 @@ import { mapState, mapGetters, mapActions } from "vuex";
 import VueQr from "vue-qr";
 import pageHelper from "@/components/pageHelper";
 export default {
-  components: { 
+  components: {
     VueQr,
     pageHelper
-   },
+  },
   data() {
     return {
       clock: null,
       dakaInfoList: "",
-      curpage:0,
-      totalpageNum:0,
+      curpage: 0,
+      totalpageNum: 0,
+      applyFriendDakaInfo: null,
+      applyFriendEmail: "",
+      showApplyFrindFrame: false
     };
   },
   created() {
@@ -41,7 +54,7 @@ export default {
       console.log(response.data[0]);
       this.dakaInfoList = response.data[0].data[0];
       this.curpage = 1;
-      this.totalpageNum = Math.ceil(response.data[0].data[1]/7); 
+      this.totalpageNum = Math.ceil(response.data[0].data[1] / 7);
     });
   },
   computed: {
@@ -50,23 +63,46 @@ export default {
   methods: {
     ...mapActions(["setLoginFlag", "setSelect3"]),
     //分页组件出发事件调用的方法
-    getPageInfo(pageNumStr){
-      this.$axios.post("/apis/daka/getDakaInfoOfPage/", {
-        pageNum:pageNumStr
-      }).then(response => {
-      this.curpage = pageNumStr;
-      // console.log(response.data[0].code);
-      // console.log(response.data[0]);
-      this.dakaInfoList = response.data[0].data;
-
-    });
-
-
+    getPageInfo(pageNumStr) {
+      this.$axios
+        .post("/apis/daka/getDakaInfoOfPage/", {
+          pageNum: pageNumStr
+        })
+        .then(response => {
+          this.curpage = pageNumStr;
+          // console.log(response.data[0].code);
+          // console.log(response.data[0]);
+          this.dakaInfoList = response.data[0].data;
+        });
     },
     modifyDate(date) {
       var d = new Date();
       d.setTime(date.time);
       return d.toLocaleString();
+    },
+    showApplyFriendFrame(dakaInfo) {
+      this.applyFriendDakaInfo = dakaInfo;
+      this.showApplyFrindFrame = true;
+    },
+    applyFriend() {
+      if (
+        this.applyFriendDakaInfo.email == sessionStorage.getItem("seesionEmail")
+      ) {
+        alert("不能添加自己为好友");
+      } else {
+        this.$axios
+          .post("/apis/daka/applyFriend/", {
+            fromEmail: sessionStorage.getItem("seesionEmail"),
+            toEmail: this.applyFriendDakaInfo.email
+          })
+          .then(response => {
+            // console.log(response.data[0].code);
+            // console.log(response.data[0]);
+            if (response.data[0].code == 0) {
+              alert("申请成功，等待确认");
+            }
+          });
+      }
     }
   }
 };
@@ -84,7 +120,7 @@ export default {
   border: 1px solid #000;
   box-sizing: border-box;
 }
-.main-cont-left .top{
+.main-cont-left .top {
   width: 100%;
   height: 427px;
   /* border: 1px solid black; */
@@ -94,9 +130,9 @@ export default {
   height: 60px;
   border: 1px solid #aaa;
   box-sizing: border-box;
-   margin-bottom: 1px;
+  margin-bottom: 1px;
 }
-.main-cont-left .bottom{
+.main-cont-left .bottom {
   margin-top: 18px;
   width: 350px;
   height: 30px;
@@ -138,11 +174,20 @@ export default {
 .main-cont-left .msg .msgTime-con .username {
   float: right;
   height: 100%;
+  cursor: pointer;
 }
 .main-cont-left .msg .msgTime-con .msgTime {
   float: right;
   height: 100%;
   width: 165px;
+}
+.main-cont-left .msg .msgTime-con .applyFriend {
+  position: relative;
+  z-index: 100;
+  background-color: #eee;
+  width: 50px;
+  cursor: pointer;
+  margin-top: 5px;
 }
 </style>
 

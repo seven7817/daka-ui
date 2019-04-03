@@ -21,7 +21,7 @@
     </div>
     <div class="bottom-con">
       <ul class="pre-date">
-        <li v-for="n in preBoxNum">{{n+preStart}}</li>
+        <li v-for="n in preBoxNum" :key="n">{{n+preStart}}</li>
       </ul>
       <ul class="cur-date">
         <li
@@ -157,8 +157,8 @@ export default {
   methods: {
     //当用户点击日历上的日期的时候进行
     showTaskDetail(n) {
-      if (this.allTasksState != null) {
-        if (this.allTasksState[n - 1] != 0) {
+      if (this.allTasksState != null ) {
+        if (this.allTasksState[n - 1] != 0 ) {
           this.$emit("showTaskDetail", this.curYear, this.curMonth, n);
         }
       }

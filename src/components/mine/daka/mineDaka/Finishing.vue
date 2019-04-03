@@ -28,6 +28,7 @@
           <div class="imgs-con">
             <img
               v-for="url in imgURLList"
+              :key="url"
               :src="url"
               onerror="this.style.display='none'"
               style="width: 100px;height: 85px;margin-right:20px;"
@@ -68,7 +69,7 @@
     </div>
     <div class="right-con">
       <ul>
-        <li v-for="finishing in finishingList">
+        <li v-for="finishing in finishingList" :key="finishing.id">
           <div class="record" @click="showDetail=true,showTop(finishing),isShowTaskDetail=false">
             <div class="title">{{finishing.title}}</div>
             <div class="bottom">
@@ -208,10 +209,10 @@ export default {
       // console.log('qiniu2: '+this.qiniuToken)
       formData.append("token", this.qiniuToken); //在后台获取到7牛的token
       var url = "";
-      let url1 = "http://pnu2yhiik.bkt.clouddn.com"; //自己公司，每个公司不一样
+      let url1 = "http://ppdgylzlh.bkt.clouddn.com"; //自己公司，每个公司不一样
       //这个上传地址应该是华南区特有
 
-      this.$axios
+      this.$axios 
         .post("https://upload-z2.qiniup.com", formData, {
           header: { "Content-Type": "multipart/form-data" }
         })

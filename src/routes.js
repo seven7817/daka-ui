@@ -11,6 +11,8 @@ import BySystem from './components/main/daka/BySystem'
 import DakaHistory from './components/mine/daka/mineDaka/DakaHistory'
 import Finishing from './components/mine/daka/mineDaka/Finishing'
 
+import Community from './components/mine/community/Communication'
+
 export const routes = [
     
     {
@@ -25,6 +27,7 @@ export const routes = [
                 { path: '/mineMenu/mineDaka/dakaHistory', component: DakaHistory },
                 { path: '/mineMenu/mineDaka/finishing', component: Finishing },
             ] },
+            { path: '/mineMenu/community', component: Community }, 
         ]
     },
     { path: '/MessageMenu', component: MessageMenu },

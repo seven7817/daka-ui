@@ -9,11 +9,11 @@
           <li :class="{'active':'2'===select}" @click="choose('2');clearSelectMineMenu()">
             <router-link to="/mineMenu/mineDaka">我的打卡</router-link>
           </li>
-          <li :class="{'active':'3'===select}" @click="choose('3')">
-            <router-link to>我的钱包</router-link>
-          </li>
-          <li :class="{'active':'4'===select}" @click="choose('4')">
-            <router-link to>我的好友</router-link>
+          <!-- <li :class="{'active':'3'===select}" @click="choose('3');clearSelectMineMenu()">
+            <router-link to="/mineMenu/community">我的钱包</router-link>
+          </li> -->
+          <li :class="{'active':'4'===select}" @click="choose('4');clearSelectMineMenu()">
+            <router-link to="/mineMenu/community">我的好友</router-link>
           </li>
         </ul>
       </div>
@@ -32,7 +32,6 @@ export default {
   },
   methods: {
     choose(index) {
-      // console.log(index);
       this.select = index;
       sessionStorage.setItem("selectMineMenuItem", index);
     },
